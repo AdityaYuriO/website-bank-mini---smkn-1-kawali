@@ -4,7 +4,7 @@
 @section('header_title')
 Selamat Datang, {{ $user->name }}!
 @endsection
-@section('header_subtitle', 'Lorem Ipsum is simply dummy text of the printing.')
+@section('header_subtitle', 'Sistem Administrasi Data Transaksi Transfer Antar Tabungan')
 
 @section('styles')
 <style>

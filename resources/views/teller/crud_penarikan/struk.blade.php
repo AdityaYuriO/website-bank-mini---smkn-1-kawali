@@ -5,13 +5,15 @@
 
 <style>
 @page {
-    size: 80mm 150mm;
+    /* Mengubah ukuran kertas menjadi lebar 102mm (10,2cm) dan tinggi 159mm (15,9cm) persis setoran */
+    size: 102mm 159mm;
     margin: 0;
 }
 
 html, body {
-    width: 80mm;
-    height: 150mm;
+    /* Mengubah ukuran body menyesuaikan ukuran kertas */
+    width: 102mm;
+    height: 159mm;
     margin: 0;
     padding: 5mm;
     box-sizing: border-box;
@@ -19,55 +21,58 @@ html, body {
     font-size: 11px;
 }
 
-body {
+body{
     zoom: 100%;
 }
 
-.title {
+.title{
     text-align: center;
     margin-bottom: 10px;
 }
 
-.title h2 {
+.title h3{
     margin: 0;
     font-size: 18px;
 }
 
-.title strong {
+.title strong{
     font-size: 13px;
 }
 
 .line {
     border-top: 1px dashed #000;
-    margin: 8px 0;
+    margin-top: 8px;    
+    margin-bottom: 15px; 
+    margin-left: 10px;  
+    margin-right: 10px; 
 }
 
-table {
+table{
     width: 100%;
     border-collapse: collapse;
 }
 
-td {
+td{
     padding: 2px 0;
     vertical-align: top;
     word-break: break-word;
 }
 
-.label {
+.label{
     width: 32%;
 }
 
-.separator {
+.separator{
     width: 5%;
     text-align: center;
 }
 
-.total {
+.total{
     font-weight: bold;
     font-size: 12px;
 }
 
-.footer {
+.footer{
     margin-top: 15px;
     text-align: center;
     font-size: 11px;
@@ -78,8 +83,7 @@ td {
 <body onload="window.print()">
 
 <div class="title">
-    <h3 style="margin:0;">BANK MINI</h3>
-    <div style="font-weight:bold; margin-top:3px;">SMKN 1 KAWALI</div>
+    <h3 style="margin:0;">BANK MINI K-ONE</h3>
     <div style="font-weight:bold; margin-top:3px;">JL.Talagasari, No.35, Kawalimukti</div>
     <div style="font-weight:bold; margin-top:3px;">STRUK PENARIKAN</div>
 </div>
@@ -88,7 +92,7 @@ td {
 
 <table>
 
-        <tr>
+    <tr>
         <td class="label">No Transaksi</td>
         <td class="separator">:</td>
         <td>{{ 'PN-' . str_pad($penarikan->id, 5, '0', STR_PAD_LEFT) }}</td>
@@ -161,7 +165,7 @@ td {
 
 <div style="height: 15px;"></div>
 
-<!-- Ruang Tanda Tangan agar sama persis struk setoran -->
+<!-- Ruang Tanda Tangan disamakan persis struk setoran -->
 <div style="margin-top:20px;">
     <table style="width:100%; text-align:center;">
         <tr>
@@ -169,7 +173,8 @@ td {
             <td style="width:50%;">Nasabah</td>
         </tr>
         <tr>
-            <td style="height:60px;"></td>
+            <!-- Tinggi tanda tangan diubah jadi 40px biar persis setoran -->
+            <td style="height:40px;"></td>
             <td></td>
         </tr>
         <tr>
@@ -182,9 +187,13 @@ td {
 <div class="footer">
     <div class="line"></div>
     Terima Kasih Telah Menggunakan Layanan Kami
+    <!-- SMS/WA dihapus kalau mau disamain 100% sama footer setoran, 
+         tapi kalau mau tetep ada, uncomment kode di bawah ini -->
+    <!-- 
     <div style="margin-top: 4px; font-weight: normal; font-size: 10px;">
         SMS/WA 0812-3456-7890
-    </div>
+    </div> 
+    -->
 </div>
 
 <script>

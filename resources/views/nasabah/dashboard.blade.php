@@ -1,11 +1,19 @@
 @extends('layouts.nasabah')
 
 @section('title', 'Dashboard - Bank Mini')
-@section('header_title', 'Selamat Datang, Nasabah!')
+@section('header_title')
+Selamat Datang, {{ $nasabah->nama_nasabah ?? 'Nasabah' }}!
+@endsection
 @section('header_subtitle', 'Pantau saldo dan transaksi Anda hari ini.')
 
 @section('content')
 <div id="viewMain" class="fade-in {{ request()->has('page') ? 'hidden' : 'block' }}">
+    <!-- MOBILE HEADER INFO -->
+    <div class="lg:hidden pt-2 pb-4">
+        <h2 class="text-xl font-bold text-textDark">Selamat Datang, {{ $nasabah->nama_nasabah ?? 'Nasabah' }}!</h2>
+        <p class="text-textGray text-xs mt-0.5">Pantau saldo dan transaksi Anda hari ini.</p>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         <div class="lg:col-span-2 bg-primary-gradient rounded-[20px] p-8 lg:p-10 relative overflow-hidden shadow-lg text-white">

@@ -88,8 +88,8 @@
             <div class="flex items-center gap-3 px-6 mb-10">
                 <img src="{{ asset('img/bankmini2.png') }}" alt="Logo Bank" class="w-12 h-12 object-contain">
                 <div>
-                    <h1 class="font-extrabold text-[16px] leading-tight tracking-tight text-gray-900">Bank Mini</h1>
-                    <p class="text-[10px] text-gray-500 font-semibold mt-0.5">K-One</p>
+                    <span class="block text-xs text-gray-500 font-semibold leading-none">Bank Mini</span>
+                    <h1 class="font-extrabold text-[18px] leading-tight tracking-tight text-gray-900 mt-1">K-One</h1>
                 </div>
             </div>
 
@@ -145,8 +145,8 @@
             <div class="flex items-center gap-2">
                 <img src="{{ asset('img/bankmini2.png') }}" alt="Logo Bank" class="w-9 h-9 object-contain">
                 <div class="flex flex-col">
-                    <span class="font-bold text-sm tracking-tight text-gray-900 leading-none">Bank Mini</span>
-                    <span class="text-[10px] text-gray-500 font-semibold leading-none mt-0.5">K-One</span>
+                    <span class="text-[10px] text-gray-500 font-semibold leading-none">Bank Mini</span>
+                    <span class="font-bold text-base tracking-tight text-gray-900 leading-tight mt-0.5">K-One</span>
                 </div>
             </div>
             <button class="p-2 bg-gray-50 rounded-lg text-brand-blue" onclick="toggleSidebar()">

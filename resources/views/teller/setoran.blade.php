@@ -4,7 +4,7 @@
 @section('header_title')
 Selamat Datang, {{ $user->name }}!
 @endsection
-@section('header_subtitle', 'Sistem Administrasi Data Transaksi Penyetoran Kas.')
+@section('header_subtitle', 'Sistem Administrasi Data Transaksi Penyetoran Tabungan.')
 
 @section('styles')
 <style>

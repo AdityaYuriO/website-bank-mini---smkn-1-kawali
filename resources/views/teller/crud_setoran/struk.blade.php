@@ -5,13 +5,15 @@
 
 <style>
 @page {
-    size: 80mm 150mm;
+    /* Mengubah ukuran kertas menjadi lebar 102mm (10,2cm) dan tinggi 159mm (15,9cm) */
+    size: 102mm 159mm;
     margin: 0;
 }
 
 html, body {
-    width: 80mm;
-    height: 150mm;
+    /* Mengubah ukuran body menyesuaikan ukuran kertas */
+    width: 102mm;
+    height: 159mm;
     margin: 0;
     padding: 5mm;
     box-sizing: border-box;
@@ -37,9 +39,13 @@ body{
     font-size: 13px;
 }
 
-.line{
+.line {
     border-top: 1px dashed #000;
-    margin: 8px 0;
+    margin-top: 8px;    
+    margin-bottom: 15px; 
+    
+    margin-left: 10px;  
+    margin-right: 10px; 
 }
 
 table{
@@ -78,8 +84,7 @@ td{
 <body onload="window.print()">
 
 <div class="title">
-    <h3 style="margin:0;">BANK MINI</h3>
-    <div style="font-weight:bold; margin-top:3px;">SMKN 1 KAWALI</div>
+    <h3 style="margin:0;">BANK MINI K-ONE</h3>
     <div style="font-weight:bold; margin-top:3px;">JL.Talagasari, No.35, Kawalimukti</div>
     <div style="font-weight:bold; margin-top:3px;">STRUK SETORAN</div>
 </div>
@@ -120,7 +125,7 @@ td{
     <tr>
         <td class="label">Petugas</td>
         <td class="separator">:</td>
-        <td>{{ optional($setoran->petugas)->user->name ?? '-' }}</td> {{-- 🔥 Diubah agar dinamis --}}
+        <td>{{ optional($setoran->petugas)->user->name ?? '-' }}</td>
     </tr>
 </table>
 
@@ -192,14 +197,14 @@ td{
 
         <!-- Ruang tanda tangan -->
         <tr>
-            <td style="height:40px;"></td> {{-- Dikecilkan sedikit dari 60px ke 40px agar hemat kertas struk --}}
+            <td style="height:40px;"></td>
             <td></td>
         </tr>
 
         <!-- Nama -->
         <tr>
             <td>
-                ( <strong>{{ optional($setoran->petugas)->user->name ?? '-' }}</strong> ) {{-- 🔥 Diubah agar dinamis --}}
+                ( <strong>{{ optional($setoran->petugas)->user->name ?? '-' }}</strong> )
             </td>
 
             <td>
@@ -212,9 +217,6 @@ td{
 <div class="footer">
     <div class="line"></div>
     Terima Kasih Telah Menggunakan Layanan Kami
-    <div style="margin-top: 4px; font-weight: normal; font-size: 10px;">
-        SMS/WA 0812-3456-7890
-    </div>
 </div>
 
 <script>

@@ -5,13 +5,15 @@
 
 <style>
 @page {
-    size: 80mm 150mm;
+    /* Mengubah ukuran kertas menjadi lebar 102mm (10,2cm) dan tinggi 159mm (15,9cm) */
+    size: 102mm 159mm;
     margin: 0;
 }
 
 html, body {
-    width: 80mm;
-    height: 150mm;
+    /* Mengubah ukuran body menyesuaikan ukuran kertas */
+    width: 102mm;
+    height: 159mm;
     margin: 0;
     padding: 5mm;
     box-sizing: border-box;
@@ -28,7 +30,7 @@ body {
     margin-bottom: 10px;
 }
 
-.title h2 {
+.title h3 {
     margin: 0;
     font-size: 18px;
 }
@@ -39,7 +41,11 @@ body {
 
 .line {
     border-top: 1px dashed #000;
-    margin: 8px 0;
+    margin-top: 8px;    
+    margin-bottom: 15px; 
+    
+    margin-left: 10px;  
+    margin-right: 10px; 
 }
 
 table {
@@ -78,8 +84,7 @@ td {
 <body onload="window.print()">
 
 <div class="title">
-    <h3 style="margin:0;">BANK MINI</h3>
-    <div style="font-weight:bold; margin-top:3px;">SMKN 1 KAWALI</div>
+    <h3 style="margin:0;">BANK MINI K-ONE</h3>
     <div style="font-weight:bold; margin-top:3px;">JL.Talagasari, No.35, Kawalimukti</div>
     <div style="font-weight:bold; margin-top:3px;">STRUK TRANSFER</div>
 </div>
@@ -191,7 +196,7 @@ td {
 
         <!-- Ruang tanda tangan -->
         <tr>
-            <td style="height:60px;"></td>
+            <td style="height:40px;"></td> <!-- Disesuaikan jadi 40px sama kaya setoran -->
             <td></td>
         </tr>
 

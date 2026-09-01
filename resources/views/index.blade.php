@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BANK MINI K-ONE</title>
     <meta name="description" content="Aplikasi Bank Mini K-One dari SMKN 1 Kawali. Sistem pengelolaan keuangan, tabungan, dan data nasabah digital untuk sekolah.">
-    <meta name="google-site-verification" content="tOckrmz3hwFznMw0UmOrJ_kuHhMYjfjNyctwHNI7AhM" />
 
     <!-- Font Google: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,6 +47,7 @@
     </script>
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
     <link rel="icon" href="{{ asset('img/bankmini2.png') }}" type="image/png">
+    <meta name="google-site-verification" content="1pN7zUA8VbuOoD5m9b8Kfq54Cr3elCQ3gDfuqzi9zMw" />
 </head>
 
 <body class="font-sans text-gray-800 bg-merek-bg antialiased selection:bg-merek-kuning selection:text-white">
@@ -579,13 +579,13 @@
                     <span class="font-bold text-base lg:text-2xl text-[#1e3a5f]">Bank Mini K-One</span>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 items-start">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 items-start">
 
                     <!-- Kolom Alamat -->
                     <div>
                         <h5 class="font-bold text-[#1e3a5f] mb-4 text-base lg:text-lg">Alamat</h5>
                         <p class="text-gray-500 text-xs lg:text-sm leading-relaxed">
-                            SMKN 1 Kawali<br>
+                            SMKN 1 Kawali
                             Jalan. Talagasari, No. 35, Kawalimukti, Kawali Ciamis 46253
                         </p>
                     </div>
@@ -605,21 +605,6 @@
                             <li>
                                 <span class="font-medium">Youtube :</span>
                                 <a href="https://youtube.com/@SMKN1KawaliOfficial" target="_blank" class="hover:text-[#1e3a5f] hover:underline transition">@SMKN1KawaliOfficial</a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Kontak -->
-                    <div>
-                        <h5 class="font-bold text-[#1e3a5f] mb-4 text-base lg:text-lg">Kontak Kami</h5>
-                        <ul class="space-y-2 text-xs lg:text-sm  text-gray-500">
-                            <li>
-                                <span class="font-medium">Email :</span>
-                                <a href="mailto:sekolah@gmail.com" class="hover:text-[#1e3a5f] hover:underline transition">sekolah@gmail.com</a>
-                            </li>
-                            <li>
-                                <span class="font-medium">Telepon :</span>
-                                <a href="tel:089001009098" class="hover:text-[#1e3a5f] hover:underline transition">(089) 001-009-098</a>
                             </li>
                         </ul>
                     </div>

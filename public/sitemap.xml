@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Halaman Utama -->
+  <url>
+    <loc>https://bankmini-one.qdtechpplgk1.id/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Tambahkan halaman publik penting lainnya di bawah jika ada, contoh: -->
+  <!--
+  <url>
+    <loc>https://bankmini-one.qdtechpplgk1.id/tentang-kami</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+</urlset>

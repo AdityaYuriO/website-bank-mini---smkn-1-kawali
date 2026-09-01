@@ -43,6 +43,14 @@ History Transaksi Nasabah
         </h3>
 
         <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <!-- TOMBOL CETAK REKENING KORAN -->
+            <button
+                type="button"
+                onclick="bukaModalCetakKoran()"
+                class="bg-white border border-gray-200 text-[#143657] px-4 py-1.5 rounded-[10px] text-[13px] font-bold flex items-center gap-2 hover:bg-gray-50 transition-all shadow-sm w-full sm:w-auto justify-center">
+                <i class="ph ph-scroll text-base"></i>
+                Cetak Rekening Koran
+            </button>
             <!-- TOMBOL CETAK BIODATA BUKU -->
             <button
                 type="button"
@@ -59,7 +67,6 @@ History Transaksi Nasabah
                 <i class="ph ph-printer text-base"></i>
                 Cetak Buku Tabungan
             </button>
-
         </div>
 
     </div>
@@ -301,6 +308,43 @@ History Transaksi Nasabah
         </button>
     </div>
 </div>
+
+<!-- ================= MODAL CETAK REKENING KORAN ================= -->
+<div id="modalCetakKoran" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 fade-in">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <h3 class="font-bold text-gray-800 text-[16px]">Cetak Rekening Koran</h3>
+            <button type="button" onclick="tutupModalCetakKoran()" class="text-gray-400 hover:text-red-500 transition-colors">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <label class="block text-[13px] font-semibold text-gray-700 mb-2">Masukkan NIS / No. Rekening</label>
+            <div class="relative mb-4">
+                <i class="ph ph-credit-card absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                <input type="text" id="inputNoRekeningKoran" placeholder="Contoh: 10029384 atau NIS"
+                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[13px] font-semibold text-gray-700 mb-2">Dari Tanggal</label>
+                    <input type="date" id="inputTanggalAwalKoran" class="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all">
+                </div>
+                <div>
+                    <label class="block text-[13px] font-semibold text-gray-700 mb-2">Sampai Tanggal</label>
+                    <input type="date" id="inputTanggalAkhirKoran" class="w-full px-3 py-2.5 bg-white border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all">
+                </div>
+            </div>
+        </div>
+        <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+            <button type="button" onclick="tutupModalCetakKoran()" class="px-4 py-2 rounded-xl text-[13px] font-bold text-gray-600 hover:bg-gray-200 transition-colors">Batal</button>
+            <button type="button" id="btnProsesCetakKoran" onclick="prosesCetakKoran()" class="px-4 py-2 rounded-xl text-[13px] font-bold bg-[#143657] text-white hover:opacity-90 transition-colors flex items-center gap-2">
+                <i class="ph ph-printer"></i> Cetak Koran
+            </button>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -509,58 +553,104 @@ History Transaksi Nasabah
         }
     }
 
-    // FUNGSI MODAL CETAK BUKU
-    function bukaModalCetak() {
-        document.getElementById('modalCetakBuku').classList.remove('hidden');
-        document.getElementById('inputNoRekening').value = '';
-        setTimeout(() => document.getElementById('inputNoRekening').focus(), 100);
+// FUNGSI MODAL CETAK BUKU
+function bukaModalCetak() {
+    document.getElementById('modalCetakBuku').classList.remove('hidden');
+    document.getElementById('inputNoRekening').value = '';
+    setTimeout(() => document.getElementById('inputNoRekening').focus(), 100);
+}
+
+function tutupModalCetak() {
+    document.getElementById('modalCetakBuku').classList.add('hidden');
+}
+
+async function prosesCetak() {
+    const noRekInput = document.getElementById('inputNoRekening').value.trim();
+    const baris = document.getElementById('inputBaris').value.trim() || 1;
+    const btn = document.getElementById('btnProsesCetak');
+
+    if (!noRekInput) {
+        bukaModalNisTidakTerdaftar('');
+        return;
     }
 
-    function tutupModalCetak() {
-        document.getElementById('modalCetakBuku').classList.add('hidden');
+    const idRekening = await verifikasiDanDapatkanNorek(noRekInput, btn);
+    if (idRekening) {
+        tutupModalCetak();
+        window.open(`/teller/cetak-buku/${idRekening}?baris=${baris}`, '_blank');
+    }
+}
+
+// FUNGSI MODAL CETAK BIODATA
+function bukaModalCetakBiodata() {
+    document.getElementById('modalCetakBiodata').classList.remove('hidden');
+    document.getElementById('inputNoRekeningBiodata').value = '';
+    setTimeout(() => document.getElementById('inputNoRekeningBiodata').focus(), 100);
+}
+
+function tutupModalCetakBiodata() {
+    document.getElementById('modalCetakBiodata').classList.add('hidden');
+}
+
+async function prosesCetakBiodata() {
+    const noRekInput = document.getElementById('inputNoRekeningBiodata').value.trim();
+    const btn = document.getElementById('btnProsesCetakBiodata');
+
+    if (!noRekInput) {
+        bukaModalNisTidakTerdaftar('');
+        return;
     }
 
-    async function prosesCetak() {
-        const noRekInput = document.getElementById('inputNoRekening').value.trim();
-        const baris = document.getElementById('inputBaris').value.trim() || 1;
-        const btn = document.getElementById('btnProsesCetak');
+    const idRekening = await verifikasiDanDapatkanNorek(noRekInput, btn);
+    if (idRekening) {
+        tutupModalCetakBiodata();
+        window.open(`/teller/cetak-biodata/${idRekening}`, '_blank');
+    }
+} // <--- PENUTUP UNTUK prosesCetakBiodata()
 
-        if (!noRekInput) {
+// ================= FUNGSI MODAL CETAK REKENING KORAN =================
+function bukaModalCetakKoran() {
+    document.getElementById('modalCetakKoran').classList.remove('hidden');
+    document.getElementById('inputNoRekeningKoran').value = '';
+    document.getElementById('inputTanggalAwalKoran').value = '';
+    document.getElementById('inputTanggalAkhirKoran').value = '';
+    setTimeout(() => document.getElementById('inputNoRekeningKoran').focus(), 100);
+}
+
+function tutupModalCetakKoran() {
+    document.getElementById('modalCetakKoran').classList.add('hidden');
+}
+
+async function prosesCetakKoran() {
+    const noRekInput = document.getElementById('inputNoRekeningKoran').value.trim();
+    const tglAwal = document.getElementById('inputTanggalAwalKoran').value;
+    const tglAkhir = document.getElementById('inputTanggalAkhirKoran').value;
+    const btn = document.getElementById('btnProsesCetakKoran');
+
+    if (!noRekInput) {
+        if (typeof bukaModalNisTidakTerdaftar === 'function') {
             bukaModalNisTidakTerdaftar('');
-            return;
+        } else {
+            alert("Harap masukkan NIS atau No. Rekening!");
         }
+        return;
+    }
 
+    if (!tglAwal || !tglAkhir) {
+        alert("Harap pilih rentang Tanggal Awal dan Tanggal Akhir!");
+        return;
+    }
+
+    if (typeof verifikasiDanDapatkanNorek === 'function') {
         const idRekening = await verifikasiDanDapatkanNorek(noRekInput, btn);
         if (idRekening) {
-            tutupModalCetak();
-            window.open(`/teller/cetak-buku/${idRekening}?baris=${baris}`, '_blank');
+            tutupModalCetakKoran();
+            window.open(`/teller/cetak-koran/${idRekening}?start_date=${tglAwal}&end_date=${tglAkhir}`, '_blank');
         }
+    } else {
+        tutupModalCetakKoran();
+        window.open(`/teller/cetak-koran/${noRekInput}?start_date=${tglAwal}&end_date=${tglAkhir}`, '_blank');
     }
-
-    function bukaModalCetakBiodata() {
-        document.getElementById('modalCetakBiodata').classList.remove('hidden');
-        document.getElementById('inputNoRekeningBiodata').value = '';
-        setTimeout(() => document.getElementById('inputNoRekeningBiodata').focus(), 100);
-    }
-
-    function tutupModalCetakBiodata() {
-        document.getElementById('modalCetakBiodata').classList.add('hidden');
-    }
-
-    async function prosesCetakBiodata() {
-        const noRekInput = document.getElementById('inputNoRekeningBiodata').value.trim();
-        const btn = document.getElementById('btnProsesCetakBiodata');
-
-        if (!noRekInput) {
-            bukaModalNisTidakTerdaftar('');
-            return;
-        }
-
-        const idRekening = await verifikasiDanDapatkanNorek(noRekInput, btn);
-        if (idRekening) {
-            tutupModalCetakBiodata();
-            window.open(`/teller/cetak-biodata/${idRekening}`, '_blank');
-        }
-    }
+}
 </script>
 @endsection

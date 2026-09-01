@@ -20,6 +20,19 @@
             margin: 0;
             padding: 0;
         }
+        
+        .biodata h3 {
+            margin: 0;
+            line-height: 1.2; 
+        }
+
+        .biodata {
+            padding-top: 12px; 
+            }
+            
+        .biodata span{
+            margin-right: 27px; 
+        }
 
         /* Sesuaikan jarak margin (top dan left) agar pas tercetak di kolom biodata fisik buku */
         .biodata-container {
@@ -31,7 +44,7 @@
 </head>
 
     <div class="biodata-container">
-        <div>
+        <div class="biodata">
             @php
                 $namaAsli = $rekening->nasabah->nama_nasabah ?? '-';
                 
@@ -54,10 +67,13 @@
                 }
             @endphp
             
-            <h3>Nama: <strong>{{ $namaFormat }}</strong></h3> <!-- Nama Nasabah -->
+            <h3><span>Nama</span>: <strong>{{ $namaFormat }}</strong></h3> <!-- Nama Nasabah -->
         </div>
-        <div>
+        <div class="biodata">
             <h3>No. Rek: <strong>{{ $rekening->id }}</strong></h3> <!-- Nomor Rekening -->
+        </div>
+        <div class="biodata">
+            <h3>Jurusan: <strong>{{ $rekening->nasabah?->jurusan?->nama_jurusan ?? '-' }}</strong></h3> <!-- Jurusan Nasabah -->
         </div>
     </div>
 <script>

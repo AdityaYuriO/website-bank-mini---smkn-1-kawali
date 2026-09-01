@@ -4,7 +4,7 @@
 @section('header_title')
 Selamat Datang, {{ $user->name }}!
 @endsection
-@section('header_subtitle', 'Lorem Ipsum is simply dummy text of the printing.')
+@section('header_subtitle', 'Pantau ringkasan transaksi kas, setoran, penarikan, dan perputaran saldo harian Anda secara real-time.')
 
 @section('content')
 <div id="viewMain" class="fade-in block">
