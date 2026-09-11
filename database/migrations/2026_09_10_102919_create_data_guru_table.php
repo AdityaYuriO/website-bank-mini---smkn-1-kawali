@@ -11,23 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_siswa', function (Blueprint $table) {
+        Schema::create('data_guru', function (Blueprint $table) {
             $table->id();
             $table->String('nama_lengkap')->nullable();
             $table->String('jabatan')->nullable();
-            $table->String('nis')->nullable();
-            $table->String('nisn')->nullable();
-            $table->foreignId('jurusan_id')->constrained('jurusan');
+            $table->String('nuptk')->nullable();
+            $table->String('nip')->nullable();
+            $table->String('nik')->nullable();
             $table->String('jenis_kelamin')->nullable();
             $table->String('tempat_lahir')->nullable();
             $table->date('tanggal_lahir')->nullable();
             $table->String('agama')->nullable();
+            $table->String('kode_pos')->nullable();
             $table->String('rt')->nullable();
             $table->String('rw')->nullable();
             $table->String('dusun')->nullable();
             $table->String('kelurahan_id')->nullable();
             $table->String('kecamatan_id')->nullable();
-            $table->String('kode_pos')->nullable();
         });
     }
 
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_siswa');
+        Schema::dropIfExists('data_guru');
     }
 };

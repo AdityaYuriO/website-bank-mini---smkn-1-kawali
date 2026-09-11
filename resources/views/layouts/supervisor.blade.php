@@ -139,6 +139,7 @@
                             <a href="{{ route('supervisor.biayatransaksi') }}" class="pl-[52px] pr-6 py-2.5 {{ $route == 'supervisor.biayatransaksi' ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Biaya Transaksi</a>
                             <a href="{{ route('supervisor.saldominimum') }}" class="pl-[52px] pr-6 py-2.5 {{ $route == 'supervisor.saldominimum' ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Saldo Minimum</a>
                             <a href="{{ route('halaman.datamaster.siswa') }}" class="pl-[52px] pr-6 py-2.5 {{ ($route == 'halaman.datamaster.siswa' || $route == 'datamaster.siswa') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Siswa</a>
+                            <a href="{{ route('halaman.datamaster.gtk') }}" class="pl-[52px] pr-6 py-2.5 {{ ($route == 'halaman.datamaster.gtk' || $route == 'datamaster.gtk') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data GTK</a>
                             <div class="h-2"></div>
                         </div>
                     </div>
@@ -601,7 +602,7 @@
                 // Instant client-side filter + debounced server fetch
                 input.addEventListener('input', function() {
                     const val = this.value;
-                    
+
                     // 1. Filter tabel secara instan (misal ketik 'kip' langsung memunculkan 'kipli')
                     filterTableRowsLocally(this, val);
 

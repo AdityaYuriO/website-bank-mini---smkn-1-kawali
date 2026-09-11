@@ -22,6 +22,8 @@ use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\Desa;
+use App\Models\data_guru;
+use App\Models\data_tendik;
 
 class superVisorController extends Controller
 {
@@ -308,7 +310,7 @@ public function verifikasiLogin(Request $request)
             compact('user', 'data', 'perPage', 'keyword')
         );
     }
-    
+
     public function setujuiLogin(String $id)
     {
         VerifikasiLogin::findOrFail($id)
@@ -481,6 +483,7 @@ public function verifikasiLogin(Request $request)
             if (!$dataNisn) {
         data_siswa::create([
             'nama_lengkap' => $request->nama_lengkap,
+            'jabatan' => 'Siswa',
             'nis' => $request->nis,
             'nisn' => $request->nisn,
             'jurusan_id' => $request->jurusan_id,
@@ -500,5 +503,74 @@ public function verifikasiLogin(Request $request)
             }
         }
         return redirect()->back()->with('success', 'data gagal ditambahkan');
+    }
+
+    public function halamanMasterGTK() {
+        $user = Auth::user();
+        $provinsi = DB::table('provinsi')->get();
+
+        return view('supervisor.crud_datanasabah.datamasterGTK', compact('user', 'provinsi' ));
+    }
+
+    public function dataMasterGTK(Request $request) {
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'jabatan' => 'required',
+            'nuptk' => 'required',
+            'nip' => 'required',
+            'nik' => 'required',
+            'jenis_kelamin' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'agama' => 'required',
+            'kode_pos' => 'required',
+            'rt' => 'required',
+            'rw' => 'required',
+            'dusun' => 'required',
+            'kelurahan' => 'required',
+            'kecamatan' => 'required',
+        ]);
+
+        if( $request->jabatan === 'TU' ) {
+            data_tendik::create([
+                'nama_lengkap' => $request->nama_lengkap,
+                'jabatan' => $request->jabatan,
+                'nuptk' => $request->nuptk,
+                'nip' => $request->nip,
+                'nik' => $request->nik,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'agama' => $request->agama,
+                'kode_pos' => $request->kode_pos,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'dusun' => $request->dusun,
+                'kelurahan_id' => $request->kelurahan,
+                'kecamatan_id' => $request->kecamatan,
+            ]);
+            return back()->with('success', 'data Tenaga Pendidik berhasil ditambah');
+        } else if ( $request->jabatan === 'Guru' ) {
+            data_guru::create([
+                'nama_lengkap' => $request->nama_lengkap,
+                'jabatan' => $request->jabatan,
+                'nuptk' => $request->nuptk,
+                'nip' => $request->nip,
+                'nik' => $request->nik,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'agama' => $request->agama,
+                'kode_pos' => $request->kode_pos,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
+                'dusun' => $request->dusun,
+                'kelurahan_id' => $request->kelurahan_id,
+                'kecamatan_id' => $request->kecamatan_id,
+            ]);
+            return back()->with('success', 'data guru berhasil ditambah');
+        } else {
+            return back()->with('failed', 'datamaster gagal ditambah');
+        }
     }
 }

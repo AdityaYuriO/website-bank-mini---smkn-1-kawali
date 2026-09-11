@@ -88,7 +88,7 @@ Route::middleware(['role:teller'])->group(function () {
 //customer service
 Route::middleware(['role:customerservice'])->group(function () {
 
-    Route::get('/siswa/{nis}', [siswaController::class, 'getSiswa']);
+    Route::get('/data-orang/{nomor}', [siswaController::class, 'getData']);
 
     route::get('/customerservice/dashboard', [csController::class, 'index'])->name('cs.dashboard');
     Route::get('/customerservice/keloladata', [rekeningController::class, 'keloladata'])->name('costumerservice.keloladata');
@@ -156,9 +156,14 @@ Route::middleware(['role:supervisor'])->group(function () {
     //print
     Route::get('supervisor/print/{id}', [superVisorController::class, 'print'])->name('print.super');
 
-    //data master
-    Route::get('supervisor/halaman/datamaster', [superVisorController::class, 'halamanDataMaster'])->name('halaman.datamaster.siswa');
+    //data master siswa
+    Route::get('supervisor/halaman/datamaster/siswa', [superVisorController::class, 'halamanDataMaster'])->name('halaman.datamaster.siswa');
     Route::post('supervisor/datamaster', [superVisorController::class, 'dataMaster'])->name('datamaster.siswa');
+
+    //data master GTK
+    Route::get('/supervisor/halaman/datamaster/gtk', [superVisorController::class, 'halamanMasterGTK'])->name('halaman.datamaster.gtk');
+    Route::post('/supervisor/datamaster', [superVisorController::class, 'dataMasterGTK'])->name('datamaster.gtk');
+
 });
 /// logika login na
 
@@ -195,7 +200,7 @@ Route::get('/cek-verifikasi-login/{id}', function ($id) {
         Auth::login($user);
 
         // Ambil role yang diminta saat login dari session
-        $roleName = session('role_verifikasi'); 
+        $roleName = session('role_verifikasi');
         session(['active_role' => $roleName]); // Set session active_role untuk Middleware
 
         return response()->json([

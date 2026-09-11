@@ -12,7 +12,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-500 mb-2">NIS/NIP</label>
-                        <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ old('nis_nip') }}" id="nis" name="nis_nip" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors">
+                        <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="{{ old('nis_nip') }}" id="nomor" name="nis_nip" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors">
                     </div>
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-500 mb-2">Nama Lengkap</label>
@@ -78,7 +78,7 @@
                     </div>
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-500 mb-2">Jabatan</label>
-                        <select name="jabatan" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
+                        <select name="jabatan" id="jabatan" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
                             <option value="" disabled selected>Pilih Jabatan</option>
                             <option value="Siswa" {{ old('jabatan') == 'Siswa' ? 'selected' : '' }}>Siswa</option>
                             <option value="Guru" {{ old('jabatan') == 'Guru' ? 'selected' : '' }}>Guru</option>
@@ -234,36 +234,49 @@ $(document).ready(function () {
     // AUTO ISI DATA SISWA
     // ============================
 
-    $('#nis').on('change', function () {
-        let nis = $(this).val();
+ $('#nomor').on('change', function () {
+    let nomor = $(this).val();
 
-        if (!nis) return;
+    if (!nomor) return;
 
-        $.ajax({
-            // Gunakan helper url() agar aman dan dinamis di server
-            url: "{{ url('/siswa') }}/" + nis,
-            type: 'GET',
-            success: function (response) {
-                if (response.status) {
-                    $('#nama_lengkap').val(response.data.nama_lengkap);
-                    $('#tempat_lahir').val(response.data.tempat_lahir);
-                    $('#tanggal_lahir').val(response.data.tanggal_lahir);
-                    $('#jenis_kelamin').val(response.data.jenis_kelamin);
-                    $('#agama').val(response.data.agama);
-                    $('#kode_pos').val(response.data.kode_pos);
-                    $('#no_hp').val(response.data.no_hp);
-                    $('#jurusan').val(response.data.jurusan_id);
+    $.ajax({
+        url: "{{ url('/data-orang') }}/" + nomor,
+        type: 'GET',
 
-                    showToast('Data siswa berhasil dimuat', 'success');
-                } else {
-                    showToast('Data siswa tidak ditemukan', 'error');
-                }
-            },
-            error: function () {
-                showToast('Terjadi kesalahan saat mengambil data.', 'error');
+        success: function (response) {
+            if (response.status) {
+
+                $('#nama_lengkap').val(response.data.nama_lengkap);
+                $('#jabatan').val(response.data.jabatan);
+                $('#tempat_lahir').val(response.data.tempat_lahir);
+                $('#tanggal_lahir').val(response.data.tanggal_lahir);
+                $('#jenis_kelamin').val(response.data.jenis_kelamin);
+                $('#agama').val(response.data.agama);
+                $('#kode_pos').val(response.data.kode_pos);
+                $('#no_hp').val(response.data.no_hp);
+                $('#jurusan').val(response.data.jurusan);
+
+                showToast(
+                    'Data ' + response.jenis + ' berhasil dimuat',
+                    'success'
+                );
+
+            } else {
+                showToast(
+                    'Data tidak ditemukan',
+                    'error'
+                );
             }
-        });
+        },
+
+        error: function () {
+            showToast(
+                'Terjadi kesalahan saat mengambil data.',
+                'error'
+            );
+        }
     });
+});
 
     // ============================
     // TITLE CASE
