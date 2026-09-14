@@ -72,7 +72,7 @@ class tellerController extends Controller
     // ===================== SETORAN ========================
     // ======================================================
 
-    public function exportSetoran( String $filter)
+    public function exportSetoran(String $filter)
     {
         $query = Setoran::query();
 
@@ -722,7 +722,7 @@ class tellerController extends Controller
         }
     }
 
-    public function updateTransfer(Request $request,String $id)
+    public function updateTransfer(Request $request, String $id)
     {
         $request->validate([
             'id_rekening_pengirim' => 'required',
@@ -920,7 +920,7 @@ class tellerController extends Controller
                     'no_rek' => $t->id_rekening_pengirim,
                     'jenis_transaksi' => 'Transfer Keluar',
                     // KELUAR -> Tampilkan Rek Penerima + Catatan
-                    'keterangan' =>$t->id_rekening_penerima . ($t->catatan ? ' ' . $t->catatan : ''),
+                    'keterangan' => $t->id_rekening_penerima . ($t->catatan ? ' ' . $t->catatan : ''),
                     'admin' => $cleanNum($t->nominal_admin),
                     'debit' => $cleanNum($t->jumlah_transfer) + $cleanNum($potongan),
                     'kredit' => 0,
@@ -938,7 +938,7 @@ class tellerController extends Controller
                     'no_rek' => $t->id_rekening_penerima,
                     'jenis_transaksi' => 'Transfer Masuk',
                     // MASUK -> Tampilkan Rek Pengirim + Catatan
-                    'keterangan' =>$t->id_rekening_pengirim . ($t->catatan ? ' ' . $t->catatan : ''),
+                    'keterangan' => $t->id_rekening_pengirim . ($t->catatan ? ' ' . $t->catatan : ''),
                     'admin' => 0,
                     'debit' => 0,
                     'kredit' => $cleanNum($t->jumlah_transfer),
@@ -967,7 +967,7 @@ class tellerController extends Controller
                     'no_rek' => $t->id_pengirim,
                     'jenis_transaksi' => 'Transfer Keluar (Nasabah)',
                     // KELUAR -> Tampilkan Rek Penerima
-                    'keterangan' =>$t->id_penerima,
+                    'keterangan' => $t->id_penerima,
                     'admin' => $adminTf,
                     'debit' => $jumlahTf + $adminTf,
                     'kredit' => 0,
@@ -985,7 +985,7 @@ class tellerController extends Controller
                     'no_rek' => $t->id_penerima,
                     'jenis_transaksi' => 'Transfer Masuk (Nasabah)',
                     // MASUK -> Tampilkan Rek Pengirim
-                    'keterangan' =>$t->id_pengirim,
+                    'keterangan' => $t->id_pengirim,
                     'admin' => 0,
                     'debit' => 0,
                     'kredit' => $jumlahTf,
@@ -1015,7 +1015,7 @@ class tellerController extends Controller
                 'nama_nasabah' => $item->buktiTf->nasabah->nama_nasabah ?? '-',
                 'no_rek' => $item->id_rekening,
                 'jenis_transaksi' => 'Transfer Dari Luar',
-                'keterangan' =>($item->nama_pengirim ?? '-'),
+                'keterangan' => ($item->nama_pengirim ?? '-'),
                 'admin' => $cleanNum($item->nominal_admin),
                 'debit' => 0,
                 'kredit' => $cleanNum($item->jumlah_transfer),
@@ -1179,6 +1179,8 @@ class tellerController extends Controller
     public function cetakBuku(Request $request, String $id_rekening)
     {
         $mulai_baris = $request->query('baris', 1);
+        $is_buku_baru = $request->query('buku_baru', 0); // <--- Tangkap parameter buku_baru
+
         $rekening = Rekening::with('nasabah')
             ->where('id', $id_rekening)
             ->orWhereHas('nasabah', function ($q) use ($id_rekening) {
@@ -1188,12 +1190,12 @@ class tellerController extends Controller
 
         $id_rekening = $rekening->id;
 
-
         $cleanNum = function ($val) {
             if (!$val) return 0;
             return is_numeric($val) ? (int) $val : (int) preg_replace('/\D/', '', $val);
         };
 
+        // 1. TARIK SEMUA DATA TRANSAKSI
         $setoran = Setoran::where('id_rekening', $id_rekening)->get()->map(function ($item) use ($cleanNum) {
             $potongan = str_contains(strtolower($item->pilihan_biaya_transaksi), 'potong') ? $item->nominal_admin : 0;
             return (object)[
@@ -1218,36 +1220,34 @@ class tellerController extends Controller
             ];
         });
 
-$transferKeluar = Transfer::with('rekeningPenerima.nasabah')
+        $transferKeluar = Transfer::with('rekeningPenerima.nasabah')
             ->where('id_rekening_pengirim', $id_rekening)
             ->get()->map(function ($t) use ($cleanNum) {
-            $potongan = str_contains(strtolower($t->pilihan_biaya_transaksi), 'potong') ? $t->nominal_admin : 0;
-            return (object)[
-                'tanggal'     => $t->created_at,
-                'jenis'       => 'TFK',
-                // Gunakan camelCase: rekeningPenerima
-                'keterangan'  => $t->id_rekening_penerima . ' ' .  ($t->rekeningPenerima->nasabah->nama_nasabah ?? '-'),
-                'biaya_admin' => $cleanNum($t->nominal_admin),
-                'debit'       => $cleanNum($t->jumlah_transfer) + $cleanNum($potongan),
-                'kredit'      => 0,
-                'saldo'       => $t->saldo_transaksi_pengirim
-            ];
-        });
+                $potongan = str_contains(strtolower($t->pilihan_biaya_transaksi), 'potong') ? $t->nominal_admin : 0;
+                return (object)[
+                    'tanggal'     => $t->created_at,
+                    'jenis'       => 'TFK',
+                    'keterangan'  => $t->id_rekening_penerima . ' ' . ($t->rekeningPenerima->nasabah->nama_nasabah ?? '-'),
+                    'biaya_admin' => $cleanNum($t->nominal_admin),
+                    'debit'       => $cleanNum($t->jumlah_transfer) + $potongan,
+                    'kredit'      => 0,
+                    'saldo'       => $t->saldo_transaksi_pengirim
+                ];
+            });
 
         $transferMasuk = Transfer::with('rekeningPengirim.nasabah')
             ->where('id_rekening_penerima', $id_rekening)
             ->get()->map(function ($t) use ($cleanNum) {
-            return (object)[
-                'tanggal'     => $t->created_at,
-                'jenis'       => 'TFM',
-                // Gunakan camelCase: rekeningPengirim
-                'keterangan'  => $t->id_rekening_pengirim . ' ' . ($t->rekeningPengirim->nasabah->nama_nasabah ?? '-'),
-                'biaya_admin' => 0,
-                'debit'       => 0,
-                'kredit'      => $cleanNum($t->jumlah_transfer),
-                'saldo'       => $t->saldo_transaksi_penerima
-            ];
-        });
+                return (object)[
+                    'tanggal'     => $t->created_at,
+                    'jenis'       => 'TFM',
+                    'keterangan'  => $t->id_rekening_pengirim . ' ' . ($t->rekeningPengirim->nasabah->nama_nasabah ?? '-'),
+                    'biaya_admin' => 0,
+                    'debit'       => 0,
+                    'kredit'      => $cleanNum($t->jumlah_transfer),
+                    'saldo'       => $t->saldo_transaksi_penerima
+                ];
+            });
 
         $transferKeluarNasabah = RiwayatTf::where('id_pengirim', $id_rekening)->get()->map(function ($t) use ($cleanNum) {
             $potongan = $cleanNum($t->nominal_admin);
@@ -1282,8 +1282,7 @@ $transferKeluar = Transfer::with('rekeningPenerima.nasabah')
                 return (object)[
                     'tanggal'     => $waktu ? Carbon::parse($waktu) : Carbon::now(),
                     'jenis'       => 'TFL',
-                    'jenis'       => 'TFL',
-                    'keterangan' => ($t->nama_pengirim ?? '-'),
+                    'keterangan'  => ($t->nama_pengirim ?? '-'),
                     'biaya_admin' => $cleanNum($t->nominal_admin),
                     'debit'       => 0,
                     'kredit'      => $cleanNum($t->jumlah_transfer),
@@ -1291,10 +1290,60 @@ $transferKeluar = Transfer::with('rekeningPenerima.nasabah')
                 ];
             });
 
-        $transaksi = collect()->concat($setoran)->concat($penarikan)
+        // Urutkan seluruh transaksi berdasarkan tanggal ascending
+        $allTransaksi = collect()->concat($setoran)->concat($penarikan)
             ->concat($transferKeluar)->concat($transferMasuk)
             ->concat($transferMasukNasabah)->concat($transferKeluarNasabah)->concat($transferDariLuar)
             ->sortBy('tanggal')->values();
+
+
+        // 2. LOGIKA BUKU BARU / BUKU HILANG
+        if ($is_buku_baru == 1 && $allTransaksi->isNotEmpty()) {
+            // Ambil transaksi paling baru saat buku dinyatakan hilang
+            $lastTx = $allTransaksi->last();
+
+            // Simpan timestamp/ID batas transaksi buku lama ke database
+            $rekening->update([
+                'buku_baru_transaksi_id' => Carbon::parse($lastTx->tanggal)->timestamp
+            ]);
+
+            // Refresh model rekening agar mendapatkan data terbaru
+            $rekening->refresh();
+        }
+
+        // 3. FILTER TRANSAKSI BERDASARKAN BATAS BUKU HILANG (JIKA ADA)
+        if ($rekening->buku_baru_transaksi_id) {
+            $batasTimestamp = $rekening->buku_baru_transaksi_id;
+
+            // Cari transaksi terakhir yang terjadi SEBELUM / PAS batas buku hilang
+            $lastOldTx = $allTransaksi->filter(function ($tx) use ($batasTimestamp) {
+                return Carbon::parse($tx->tanggal)->timestamp <= $batasTimestamp;
+            })->last();
+
+            // Saldo yang dibawa ke buku baru
+            $saldoPindahan = $lastOldTx ? $lastOldTx->saldo : 0;
+
+            // Ambil transaksi yang terjadi SETELAH batas buku hilang
+            $transaksiBaru = $allTransaksi->filter(function ($tx) use ($batasTimestamp) {
+                return Carbon::parse($tx->tanggal)->timestamp > $batasTimestamp;
+            })->values();
+
+            // Buat 1 baris dummy penyesuaian Saldo Pindahan untuk dicetak di Baris 1
+            $barisSaldoPindahan = (object)[
+                'tanggal'     => Carbon::createFromTimestamp($batasTimestamp),
+                'jenis'       => 'SP',
+                'keterangan'  => 'PINDAHAN BUKU LAMA',
+                'biaya_admin' => 0,
+                'debit'       => 0,
+                'kredit'      => 0,
+                'saldo'       => $saldoPindahan
+            ];
+
+            // Gabungkan baris Saldo Pindahan di urutan paling awal
+            $transaksi = collect([$barisSaldoPindahan])->concat($transaksiBaru);
+        } else {
+            $transaksi = $allTransaksi;
+        }
 
         return view('teller.cetak_buku', compact('rekening', 'transaksi', 'mulai_baris'));
     }
@@ -1342,100 +1391,100 @@ $transferKeluar = Transfer::with('rekeningPenerima.nasabah')
         };
 
         // 3. Tarik data dari semua tabel transaksi DENGAN FILTER TANGGAL
-        
+
         $setoran = Setoran::where('id_rekening', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($item) use ($cleanNum) {
-            $potongan = str_contains(strtolower($item->pilihan_biaya_transaksi), 'potong') ? $item->nominal_admin : 0;
-            return (object)[
-                'tanggal'     => $item->created_at ? \Carbon\Carbon::parse($item->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'ST',
-                'biaya_admin' => $cleanNum($item->nominal_admin),
-                'debit'       => 0,
-                'kredit'      => $cleanNum($item->jumlah_penyetoran) - $cleanNum($potongan),
-                'saldo'       => $item->saldo_transaksi
-            ];
-        });
+                $potongan = str_contains(strtolower($item->pilihan_biaya_transaksi), 'potong') ? $item->nominal_admin : 0;
+                return (object)[
+                    'tanggal'     => $item->created_at ? \Carbon\Carbon::parse($item->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'ST',
+                    'biaya_admin' => $cleanNum($item->nominal_admin),
+                    'debit'       => 0,
+                    'kredit'      => $cleanNum($item->jumlah_penyetoran) - $cleanNum($potongan),
+                    'saldo'       => $item->saldo_transaksi
+                ];
+            });
 
         $penarikan = Penarikan::where('id_rekening', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($item) use ($cleanNum) {
-            $potongan = str_contains(strtolower($item->pilihan_biaya_transaksi), 'potong') ? $item->nominal_admin : 0;
-            return (object)[
-                'tanggal'     => $item->created_at ? \Carbon\Carbon::parse($item->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'TT',
-                'biaya_admin' => $cleanNum($item->nominal_admin),
-                'debit'       => $cleanNum($item->jumlah_penarikan) + $cleanNum($potongan),
-                'kredit'      => 0,
-                'saldo'       => $item->saldo_transaksi
-            ];
-        });
+                $potongan = str_contains(strtolower($item->pilihan_biaya_transaksi), 'potong') ? $item->nominal_admin : 0;
+                return (object)[
+                    'tanggal'     => $item->created_at ? \Carbon\Carbon::parse($item->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'TT',
+                    'biaya_admin' => $cleanNum($item->nominal_admin),
+                    'debit'       => $cleanNum($item->jumlah_penarikan) + $cleanNum($potongan),
+                    'kredit'      => 0,
+                    'saldo'       => $item->saldo_transaksi
+                ];
+            });
 
         $transferKeluar = Transfer::with('rekeningPenerima.nasabah')
             ->where('id_rekening_pengirim', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($t) use ($cleanNum) {
-            $potongan = str_contains(strtolower($t->pilihan_biaya_transaksi), 'potong') ? $t->nominal_admin : 0;
-            return (object)[
-                'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'TFK',
-                'keterangan'  => $t->id_rekening_penerima . ' ' .  ($t->rekeningPenerima->nasabah->nama_nasabah ?? '-'),
-                'biaya_admin' => $cleanNum($t->nominal_admin),
-                'debit'       => $cleanNum($t->jumlah_transfer) + $cleanNum($potongan),
-                'kredit'      => 0,
-                'saldo'       => $t->saldo_transaksi_pengirim
-            ];
-        });
+                $potongan = str_contains(strtolower($t->pilihan_biaya_transaksi), 'potong') ? $t->nominal_admin : 0;
+                return (object)[
+                    'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'TFK',
+                    'keterangan'  => $t->id_rekening_penerima . ' ' .  ($t->rekeningPenerima->nasabah->nama_nasabah ?? '-'),
+                    'biaya_admin' => $cleanNum($t->nominal_admin),
+                    'debit'       => $cleanNum($t->jumlah_transfer) + $cleanNum($potongan),
+                    'kredit'      => 0,
+                    'saldo'       => $t->saldo_transaksi_pengirim
+                ];
+            });
 
         $transferMasuk = Transfer::with('rekeningPengirim.nasabah')
             ->where('id_rekening_penerima', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($t) use ($cleanNum) {
-            return (object)[
-                'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'TFM',
-                'keterangan'  => $t->id_rekening_pengirim . ' ' . ($t->rekeningPengirim->nasabah->nama_nasabah ?? '-'),
-                'biaya_admin' => 0,
-                'debit'       => 0,
-                'kredit'      => $cleanNum($t->jumlah_transfer),
-                'saldo'       => $t->saldo_transaksi_penerima
-            ];
-        });
+                return (object)[
+                    'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'TFM',
+                    'keterangan'  => $t->id_rekening_pengirim . ' ' . ($t->rekeningPengirim->nasabah->nama_nasabah ?? '-'),
+                    'biaya_admin' => 0,
+                    'debit'       => 0,
+                    'kredit'      => $cleanNum($t->jumlah_transfer),
+                    'saldo'       => $t->saldo_transaksi_penerima
+                ];
+            });
 
         $transferKeluarNasabah = RiwayatTf::where('id_pengirim', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($t) use ($cleanNum) {
-            $potongan = $cleanNum($t->nominal_admin);
-            return (object)[
-                'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'TFK',
-                'keterangan'  => $t->id_penerima . ' ' . $t->nama_penerima,
-                'biaya_admin' => $potongan,
-                'debit'       => $cleanNum($t->jumlah_transfer) + $potongan,
-                'kredit'      => 0,
-                'saldo'       => $t->saldo_transaksi_pengirim
-            ];
-        });
+                $potongan = $cleanNum($t->nominal_admin);
+                return (object)[
+                    'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'TFK',
+                    'keterangan'  => $t->id_penerima . ' ' . $t->nama_penerima,
+                    'biaya_admin' => $potongan,
+                    'debit'       => $cleanNum($t->jumlah_transfer) + $potongan,
+                    'kredit'      => 0,
+                    'saldo'       => $t->saldo_transaksi_pengirim
+                ];
+            });
 
         $transferMasukNasabah = RiwayatTf::where('id_penerima', $id_rekening)
             ->whereBetween('created_at', [$start, $end])
             ->get()->map(function ($t) use ($cleanNum) {
-            return (object)[
-                'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
-                'jenis'       => 'TFM',
-                'keterangan'  => $t->id_pengirim . ' ' . ($t->pengirim->nasabah->nama_nasabah ?? '-'),
-                'biaya_admin' => 0,
-                'debit'       => 0,
-                'kredit'      => $cleanNum($t->jumlah_transfer),
-                'saldo'       => $t->saldo_transaksi_penerima
-            ];
-        });
+                return (object)[
+                    'tanggal'     => $t->created_at ? \Carbon\Carbon::parse($t->created_at) : \Carbon\Carbon::now(),
+                    'jenis'       => 'TFM',
+                    'keterangan'  => $t->id_pengirim . ' ' . ($t->pengirim->nasabah->nama_nasabah ?? '-'),
+                    'biaya_admin' => 0,
+                    'debit'       => 0,
+                    'kredit'      => $cleanNum($t->jumlah_transfer),
+                    'saldo'       => $t->saldo_transaksi_penerima
+                ];
+            });
 
         $transferDariLuar = Bukti_Tf::where('id_rekening', $id_rekening)
             ->whereIn('status_verifikasi', ['berhasil'])
             ->where(function ($query) use ($start, $end) {
                 $query->whereBetween('created_at', [$start, $end])
-                      ->orWhereBetween('datetime_tgl', [$start, $end]);
+                    ->orWhereBetween('datetime_tgl', [$start, $end]);
             })
             ->get()
             ->map(function ($t) use ($cleanNum) {
