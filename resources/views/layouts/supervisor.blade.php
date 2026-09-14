@@ -109,7 +109,7 @@
             <nav class="flex-1 flex flex-col gap-1 w-full overflow-y-auto custom-scrollbar">
                 @php
                 $route = Route::currentRouteName();
-                $isKelolaData = str_contains($route, 'supervisor.datapetugas') || str_contains($route, 'supervisor.datanasabah') || str_contains($route, 'supervisor.biayatransaksi') || str_contains($route, 'supervisor.saldominimum') || str_contains($route, 'datamaster.siswa');
+                $isKelolaData = str_contains($route, 'supervisor.datapetugas') || str_contains($route, 'supervisor.datanasabah') || str_contains($route, 'supervisor.biayatransaksi') || str_contains($route, 'supervisor.saldominimum') || str_contains($route, 'datamaster.siswa') || str_contains($route, 'datamaster.gtk');
                 @endphp
 
                 <!-- Dashboard -->
