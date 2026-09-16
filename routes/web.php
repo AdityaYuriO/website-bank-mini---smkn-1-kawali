@@ -218,3 +218,49 @@ Route::get('/cek-rekening/{id}', [Bukti_tfController::class, 'cekRekening']);
 Route::get('/get-kabupaten/{id}', [alamatController::class, 'getKabupaten']);
 Route::get('/get-kecamatan/{id}', [alamatController::class, 'getKecamatan']);
 Route::get('/get-desa/{id}', [alamatController::class, 'getDesa']);
+
+// ================= ROUTE PROTOTYPE ROLE ADMIN (100% PURE FRONTEND) =================
+Route::prefix('admin')->group(function () {
+    Route::redirect('/', '/admin/supervisor/dashboard');
+
+    // Supervisor
+    Route::get('/supervisor/dashboard', fn() => view('admin.supervisor.dashboard'))->name('admin.supervisor.dashboard');
+    Route::get('/supervisor/datapetugas', fn() => view('admin.supervisor.datapetugas'))->name('admin.supervisor.datapetugas');
+    Route::get('/supervisor/datanasabah', fn() => view('admin.supervisor.datanasabah'))->name('admin.supervisor.datanasabah');
+    Route::get('/supervisor/biayatransaksi', fn() => view('admin.supervisor.biayatransaksi'))->name('admin.supervisor.biayatransaksi');
+    Route::get('/supervisor/saldominimum', fn() => view('admin.supervisor.saldoMinimum'))->name('admin.supervisor.saldominimum');
+    Route::get('/supervisor/saldo-minimum', fn() => view('admin.supervisor.saldoMinimum'));
+    Route::get('/supervisor/datamaster/siswa', fn() => view('admin.supervisor.crud_datanasabah.datamasterSiswa'))->name('admin.supervisor.datamaster.siswa');
+    Route::get('/supervisor/datamaster/gtk', fn() => view('admin.supervisor.crud_datanasabah.datamasterGTK'))->name('admin.supervisor.datamaster.gtk');
+    Route::get('/supervisor/detail/nasabah', fn() => view('admin.supervisor.crud_datanasabah.detail'))->name('admin.supervisor.detail.nasabah');
+    Route::get('/supervisor/print/nasabah', fn() => view('admin.supervisor.crud_datanasabah.print'))->name('admin.supervisor.print.nasabah');
+
+    // Supervisor Verifikasi
+    Route::get('/supervisor/verifikasi/login', fn() => view('admin.supervisor.verifikasi.login'))->name('admin.supervisor.verifikasi.login');
+    Route::get('/supervisor/verifikasi/registrasi', fn() => view('admin.supervisor.verifikasi.registrasirekening'))->name('admin.supervisor.verifikasi.registrasi');
+    Route::get('/supervisor/verifikasi/registrasirekening', fn() => view('admin.supervisor.verifikasi.registrasirekening'));
+    Route::get('/supervisor/verifikasi/registrasirekening/detail', fn() => view('admin.supervisor.verifikasi.registrasirekening.detail'));
+    Route::get('/supervisor/verifikasi/registrasirekening/revisi', fn() => view('admin.supervisor.verifikasi.registrasirekening.revisi'));
+    Route::get('/supervisor/verifikasi/transfer', fn() => view('admin.supervisor.verifikasi.transfer'))->name('admin.supervisor.verifikasi.transfer');
+
+    // Customer Service
+    Route::get('/costumerservice/dashboard', fn() => view('admin.costumerservice.dashboard'))->name('admin.cs.dashboard');
+    Route::get('/costumerservice/dashboard', fn() => view('admin.costumerservice.dashboard'))->name('admin.costumerservice.dashboard');
+    Route::get('/costumerservice/keloladata', fn() => view('admin.costumerservice.keloladata'))->name('admin.cs.keloladata');
+    Route::get('/costumerservice/keloladata', fn() => view('admin.costumerservice.keloladata'))->name('admin.costumerservice.keloladata');
+    Route::get('/costumerservice/edit/{id?}', fn() => view('admin.costumerservice.crudnasabah.edit'))->name('admin.cs.edit');
+    Route::get('/costumerservice/edit/{id?}', fn() => view('admin.costumerservice.crudnasabah.edit'))->name('admin.costumerservice.edit');
+    Route::get('/costumerservice/import', fn() => view('admin.costumerservice.crudnasabah.import'))->name('admin.cs.import');
+    Route::get('/costumerservice/import', fn() => view('admin.costumerservice.crudnasabah.import'))->name('admin.costumerservice.import');
+    Route::get('/costumerservice/print', fn() => view('admin.costumerservice.crudnasabah.print'))->name('admin.cs.print');
+    Route::get('/costumerservice/print', fn() => view('admin.costumerservice.crudnasabah.print'))->name('admin.costumerservice.print');
+
+    // Teller
+    Route::get('/teller/dashboard', fn() => view('admin.teller.dashboard'))->name('admin.teller.dashboard');
+    Route::get('/teller/setoran', fn() => view('admin.teller.dashboard'))->name('admin.teller.setoran');
+    Route::get('/teller/penarikan', fn() => view('admin.teller.dashboard'))->name('admin.teller.penarikan');
+    Route::get('/teller/transfer', fn() => view('admin.teller.dashboard'))->name('admin.teller.transfer');
+    Route::get('/teller/history-nasabah', fn() => view('admin.teller.dashboard'))->name('admin.teller.history_nasabah');
+});
+
+
