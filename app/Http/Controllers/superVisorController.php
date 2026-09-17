@@ -40,7 +40,7 @@ class superVisorController extends Controller
         $totalNasabah = User::where('role_id', 1)->get()->count();
         $nasabahTf = Bukti_Tf::latest()->get();
         $nasabahTfPending = Bukti_Tf::where('status_verifikasi', 'pending')->get();
-        $totalSaldoTabungan = Bukti_Tf::where('status_verifikasi', 'berhasil')->sum('jumlah_transfer');
+        $totalSaldoTabungan = Rekening::where('status_akun', 'aktif')->sum('saldo_saat_ini');
         $nasabahPending = Nasabah::with('rekening')
             ->whereHas('rekening', function ($query) {
                 $query->where('status_akun', 'non-aktif');
@@ -106,8 +106,8 @@ class superVisorController extends Controller
     }
 
     public function verifikasiTf(Request $request, String $id)
-{
-    $data = Bukti_Tf::findOrFail($id);
+    {
+        $data = Bukti_Tf::findOrFail($id);
 
         if ($data->status_verifikasi !== 'pending') {
             return redirect()->back()->with('error', 'Transaksi ini sudah diproses sebelumnya.');
@@ -230,7 +230,7 @@ class superVisorController extends Controller
         $keyword = $request->keyword;
 
         $userNasabah = Nasabah::with('rekening')->orderByDesc('id')
-                    // Tambahkan logika pencarian di sini
+            // Tambahkan logika pencarian di sini
             ->when($keyword, function ($query, $keyword) {
                 $query->where(function ($q) use ($keyword) {
                     $q->where('nama_nasabah', 'like', '%' . $keyword . '%')
@@ -284,7 +284,7 @@ class superVisorController extends Controller
         return view('supervisor.verifikasi.registrasirekening.revisi', compact('nasabah', 'rekening', 'user'));
     }
 
-public function verifikasiLogin(Request $request)
+    public function verifikasiLogin(Request $request)
     {
         $user = Auth::user();
         $perPage = $request->input('per_page', 10);
@@ -446,7 +446,8 @@ public function verifikasiLogin(Request $request)
     }
 
     //data master
-    public function halamanDataMaster() {
+    public function halamanDataMaster()
+    {
         $user = Auth::user();
         $provinsi = DB::table('provinsi')->get();
         $jurusan = DB::table('jurusan')->get();
@@ -454,7 +455,8 @@ public function verifikasiLogin(Request $request)
         return view('supervisor.crud_datanasabah.datamasterSiswa', compact('user', 'provinsi', 'jurusan'));
     }
 
-    public function dataMaster( Request $request) {
+    public function dataMaster(Request $request)
+    {
 
         $request->validate([
             'nama_lengkap' => 'required',
@@ -481,38 +483,40 @@ public function verifikasiLogin(Request $request)
 
         if (!$dataSiswa) {
             if (!$dataNisn) {
-        data_siswa::create([
-            'nama_lengkap' => $request->nama_lengkap,
-            'jabatan' => 'Siswa',
-            'nis' => $request->nis,
-            'nisn' => $request->nisn,
-            'jurusan_id' => $request->jurusan_id,
-            'jenis_kelamin'=> $request->jenis_kelamin,
-            'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'agama' => $request->agama,
-            'rt' => $request->rt,
-            'rw' => $request->rw,
-            'dusun' => $request->dusun,
-            'kelurahan_id' => $request->kelurahan,
-            'kecamatan_id' => $request->kecamatan,
-            'kode_pos' => $request->kode_pos,
-        ]);
+                data_siswa::create([
+                    'nama_lengkap' => $request->nama_lengkap,
+                    'jabatan' => 'Siswa',
+                    'nis' => $request->nis,
+                    'nisn' => $request->nisn,
+                    'jurusan_id' => $request->jurusan_id,
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'tempat_lahir' => $request->tempat_lahir,
+                    'tanggal_lahir' => $request->tanggal_lahir,
+                    'agama' => $request->agama,
+                    'rt' => $request->rt,
+                    'rw' => $request->rw,
+                    'dusun' => $request->dusun,
+                    'kelurahan_id' => $request->kelurahan,
+                    'kecamatan_id' => $request->kecamatan,
+                    'kode_pos' => $request->kode_pos,
+                ]);
 
-        return redirect()->route('halaman.datamaster.siswa')->with('success','Data siswa berhasil ditambahkan');
+                return redirect()->route('halaman.datamaster.siswa')->with('success', 'Data siswa berhasil ditambahkan');
             }
         }
         return redirect()->back()->with('success', 'data gagal ditambahkan');
     }
 
-    public function halamanMasterGTK() {
+    public function halamanMasterGTK()
+    {
         $user = Auth::user();
         $provinsi = DB::table('provinsi')->get();
 
-        return view('supervisor.crud_datanasabah.datamasterGTK', compact('user', 'provinsi' ));
+        return view('supervisor.crud_datanasabah.datamasterGTK', compact('user', 'provinsi'));
     }
 
-    public function dataMasterGTK(Request $request) {
+    public function dataMasterGTK(Request $request)
+    {
         $request->validate([
             'nama_lengkap' => 'required',
             'jabatan' => 'required',
@@ -531,7 +535,7 @@ public function verifikasiLogin(Request $request)
             'kecamatan' => 'required',
         ]);
 
-        if( $request->jabatan === 'TU' ) {
+        if ($request->jabatan === 'TU') {
             data_tendik::create([
                 'nama_lengkap' => $request->nama_lengkap,
                 'jabatan' => $request->jabatan,
@@ -550,7 +554,7 @@ public function verifikasiLogin(Request $request)
                 'kecamatan_id' => $request->kecamatan,
             ]);
             return back()->with('success', 'data Tenaga Pendidik berhasil ditambah');
-        } else if ( $request->jabatan === 'Guru' ) {
+        } else if ($request->jabatan === 'Guru') {
             data_guru::create([
                 'nama_lengkap' => $request->nama_lengkap,
                 'jabatan' => $request->jabatan,

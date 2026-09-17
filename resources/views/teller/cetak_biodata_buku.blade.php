@@ -40,42 +40,53 @@
             left: 1cm;
             /* Jarak dari tepi kiri buku */
         }
-    </style>
+    </style> 
 </head>
 
     <div class="biodata-container">
-        <div class="biodata">
-            @php
-                $namaAsli = $rekening->nasabah->nama_nasabah ?? '-';
-                
-                // Rapikan spasi dan buat huruf awal setiap kata menjadi kapital (Title Case)
-                $namaAsli = ucwords(strtolower(trim($namaAsli)));
-                
-                // Pecah menjadi array dan reset indeks (array_values) agar aman jika ada spasi ganda
-                $kata = array_values(array_filter(explode(' ', $namaAsli))); 
-                
-                if (count($kata) > 2) {
-                    // Ambil 2 kata pertama secara utuh
-                    $namaFormat = $kata[0] . ' ' . $kata[1];
-                    
-                    // Singkat sisa kata berikutnya dan tambahkan titik
-                    for ($i = 2; $i < count($kata); $i++) {
-                        $namaFormat .= ' ' . strtoupper(substr($kata[$i], 0, 1)) . '.';
-                    }
-                } else {
-                    $namaFormat = $namaAsli;
-                }
-            @endphp
+        @php
+            $namaAsli = $rekening->nasabah->nama_nasabah ?? '-';
             
+            // Rapikan spasi dan buat huruf awal setiap kata menjadi kapital (Title Case)
+            $namaAsli = ucwords(strtolower(trim($namaAsli)));
+            
+            // Pecah menjadi array dan reset indeks (array_values) agar aman jika ada spasi ganda
+            $kata = array_values(array_filter(explode(' ', $namaAsli))); 
+            
+            if (count($kata) > 2) {
+                // Ambil 2 kata pertama secara utuh
+                $namaFormat = $kata[0] . ' ' . $kata[1];
+                
+                // Singkat sisa kata berikutnya dan tambahkan titik
+                for ($i = 2; $i < count($kata); $i++) {
+                    $namaFormat .= ' ' . strtoupper(substr($kata[$i], 0, 1)) . '.';
+                }
+            } else {
+                $namaFormat = $namaAsli;
+            }
+
+            // Ambil data nama jurusan dan status jabatan nasabah
+            $namaJurusan = $rekening->nasabah?->jurusan?->nama_jurusan;
+            
+            // Ambil nama jabatan (sesuaikan nama field 'nama_jabatan' atau 'jabatan' dengan kolom DB kamu)
+            $jabatan     = $rekening->nasabah?->jabatan?->nama_jabatan ?? $rekening->nasabah?->jabatan;
+        @endphp
+        
+        <div class="biodata">
             <h3><span>Nama</span>: <strong>{{ $namaFormat }}</strong></h3> <!-- Nama Nasabah -->
         </div>
         <div class="biodata">
             <h3>No. Rek: <strong>{{ $rekening->id }}</strong></h3> <!-- Nomor Rekening -->
         </div>
-        <div class="biodata">
-            <h3>Jurusan: <strong>{{ $rekening->nasabah?->jurusan?->nama_jurusan ?? '-' }}</strong></h3> <!-- Jurusan Nasabah -->
-        </div>
+
+        <!-- Hanya muncul jika jabatannya 'Siswa' ATAU 'siswa' -->
+        @if(strtolower(trim($jabatan ?? '')) === 'siswa')
+            <div class="biodata">
+                <h3>Jurusan: <strong>{{ $namaJurusan ?? '-' }}</strong></h3> <!-- Jurusan Nasabah -->
+            </div>
+        @endif
     </div>
+
 <script>
     // Langsung memunculkan dialog print saat halaman selesai dimuat
     window.onload = function() {
