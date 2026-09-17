@@ -58,6 +58,7 @@
                             <option value="5" {{ old('jurusan') == '5' ? 'selected' : '' }}>MPLB</option>
                             <option value="6" {{ old('jurusan') == '6' ? 'selected' : '' }}>AKL</option>
                             <option value="7" {{ old('jurusan') == '7' ? 'selected' : '' }}>SK</option>
+                            <option value="8" {{ old('jurusan') == '8' ? 'selected' : '' }}>TU</option>
                         </select>
                     </div>
                     <div>

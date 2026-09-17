@@ -58,9 +58,6 @@ class rekeningController extends Controller
             // 'no_rekening' => 'required',
         ]);
 
-        $dataSiswa = DB::table('data_siswa')
-            ->where('nis', $request->nis_nip)->first();
-
         $dataEmail = Nasabah::where('email', $request->email)->first();
         $nis_nip = Nasabah::where('nis_nip', $request->nis_nip)->first();
 
@@ -68,7 +65,6 @@ class rekeningController extends Controller
         // $roleNasabah = Role::where('nama_role', 'nasabah')->first();
     if (!$nis_nip) {
         if (!$dataEmail) {
-            if ( $dataSiswa ) {
 
                         $userNasabah = User::create([
                             'name' => $request->nama_lengkap,
@@ -132,7 +128,6 @@ class rekeningController extends Controller
                         ]);
 
                         return redirect()->route('costumerservice.keloladata')->with('success','Data Rekening berhasil ditambah');
-                    }
         } else {
             return back()->with('failed','Email Sudah Terdaftar');
         }

@@ -53,7 +53,13 @@ class JurusanSeeder extends Seeder
         Jurusan::create([
             'id' => 07,
             'nama_jurusan' => 'Sk',
-            'singkatan' => 'Seni Karawitan'
+            'singkatan' => 'Seni Karawitan',
+        ]);
+
+        Jurusan::create([
+            'id' => 8,
+            'nama_jurusan' => 'TU',
+            'singkatan' => 'Tenaga Kependidikan',
         ]);
     }
 }

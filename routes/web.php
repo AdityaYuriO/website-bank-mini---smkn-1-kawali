@@ -158,11 +158,11 @@ Route::middleware(['role:supervisor'])->group(function () {
 
     //data master siswa
     Route::get('supervisor/halaman/datamaster/siswa', [superVisorController::class, 'halamanDataMaster'])->name('halaman.datamaster.siswa');
-    Route::post('supervisor/datamaster', [superVisorController::class, 'dataMaster'])->name('datamaster.siswa');
+    Route::post('supervisor/datamaster/siswa', [superVisorController::class, 'dataMaster'])->name('datamaster.siswa');
 
     //data master GTK
     Route::get('/supervisor/halaman/datamaster/gtk', [superVisorController::class, 'halamanMasterGTK'])->name('halaman.datamaster.gtk');
-    Route::post('/supervisor/datamaster', [superVisorController::class, 'dataMasterGTK'])->name('datamaster.gtk');
+    Route::post('/supervisor/datamaster/gtk', [superVisorController::class, 'dataMasterGTK'])->name('datamaster.gtk');
 
 });
 /// logika login na
