@@ -13,10 +13,12 @@ class Rekening extends Model
     public $incrementing = false;
 
     protected $keyType = 'string';
+
     protected $fillable = [
         'id',
         'nasabah_id',
         'saldo_saat_ini',
+        'buku_baru_transaksi_id', // <--- Tambahin kolom ini bray
         'status_akun'
     ];
 

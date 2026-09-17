@@ -15,7 +15,11 @@ return new class extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->foreignId('nasabah_id')->constrained('nasabah');
             $table->integer('saldo_saat_ini');
-            $table->Enum('status_akun', ['aktif','non-aktif','pending','revisi']);
+
+            // Kolom penanda jika buku tabungan pernah hilang/ganti baru
+            $table->unsignedBigInteger('buku_baru_transaksi_id')->nullable();
+
+            $table->enum('status_akun', ['aktif', 'non-aktif', 'pending', 'revisi']);
             $table->timestamps();
         });
     }

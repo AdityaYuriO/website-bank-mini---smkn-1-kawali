@@ -232,6 +232,7 @@ History Transaksi Nasabah
         </div>
     </div>
 </div>
+
 <!-- ================= MODAL CETAK BUKU TABUNGAN ================= -->
 <div id="modalCetakBuku" class="hidden fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 fade-in">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
@@ -241,6 +242,7 @@ History Transaksi Nasabah
                 <i class="ph-bold ph-x text-lg"></i>
             </button>
         </div>
+        
         <div class="p-6">
             <label class="block text-[13px] font-semibold text-gray-700 mb-2">Masukkan NIS / No. Rekening Nasabah</label>
             <div class="relative">
@@ -248,17 +250,32 @@ History Transaksi Nasabah
                 <input type="text" id="inputNoRekening" placeholder="Contoh: 10029384 atau NIS"
                     class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all">
             </div>
-            <!-- INPUT BARU: MULAI BARIS -->
+
+            <!-- INPUT MULAI BARIS -->
             <label class="block text-[13px] font-semibold text-gray-700 mb-2 mt-4">Mulai Cetak dari Baris ke-?</label>
             <div class="relative">
                 <i class="ph ph-list-numbers absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
                 <input type="number" id="inputBaris" value="1" min="1"
                     class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all">
             </div>
+
+            <!-- OPSI BUKU HILANG / TERBIT BUKU BARU -->
+            <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-3">
+                <input type="checkbox" id="checkBukuBaru" class="mt-1 w-4 h-4 text-brand-blue rounded focus:ring-brand-blue border-gray-300 cursor-pointer">
+                <label for="checkBukuBaru" class="text-xs text-amber-800 cursor-pointer font-medium leading-relaxed">
+                    <span class="font-bold block text-amber-900">Buku Lama Hilang / Terbit Buku Baru?</span>
+                    Centang ini jika nasabah ganti buku fisik baru. Sistem akan mengunci saldo terakhir dan memulai cetakan dari Baris 1 buku baru.
+                </label>
+            </div>
+
             <p class="text-xs text-gray-500 mt-2">Sistem hanya akan mencetak riwayat transaksi milik NIS / nomor rekening ini.</p>
         </div>
+
+        <!-- FOOTER TOMBOL AKSI -->
         <div class="p-5 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
-            <button type="button" onclick="tutupModalCetak()" class="px-4 py-2 rounded-xl text-[13px] font-bold text-gray-600 hover:bg-gray-200 transition-colors">Batal</button>
+            <button type="button" onclick="tutupModalCetak()" class="px-4 py-2 rounded-xl text-[13px] font-bold text-gray-600 hover:bg-gray-200 transition-colors">
+                Batal
+            </button>
             <button type="button" id="btnProsesCetak" onclick="prosesCetak()" class="px-4 py-2 rounded-xl text-[13px] font-bold bg-brand-blue text-white hover:opacity-90 transition-colors flex items-center gap-2">
                 <i class="ph ph-printer"></i> Cetak Sekarang
             </button>
@@ -567,6 +584,8 @@ function tutupModalCetak() {
 async function prosesCetak() {
     const noRekInput = document.getElementById('inputNoRekening').value.trim();
     const baris = document.getElementById('inputBaris').value.trim() || 1;
+    // Tangkap status checkbox (bernilai true jika dicentang, false jika tidak)
+    const isBukuBaru = document.getElementById('checkBukuBaru').checked ? 1 : 0;
     const btn = document.getElementById('btnProsesCetak');
 
     if (!noRekInput) {
@@ -577,7 +596,8 @@ async function prosesCetak() {
     const idRekening = await verifikasiDanDapatkanNorek(noRekInput, btn);
     if (idRekening) {
         tutupModalCetak();
-        window.open(`/teller/cetak-buku/${idRekening}?baris=${baris}`, '_blank');
+        // Tambahkan query parameter &buku_baru=${isBukuBaru}
+        window.open(`/teller/cetak-buku/${idRekening}?baris=${baris}&buku_baru=${isBukuBaru}`, '_blank');
     }
 }
 

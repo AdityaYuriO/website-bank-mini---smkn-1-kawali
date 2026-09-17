@@ -1,9 +1,9 @@
-@extends('layouts.supervisor')
+@extends('layouts.admin')
 
-@section('title', 'Data GTK - Supervisor')
+@section('title', 'Data Siswa - Supervisor')
 
-@section('header_title', 'Data GTK')
-@section('header_subtitle', 'Formulir Tambah Data GTK')
+@section('header_title', 'Data Siswa')
+@section('header_subtitle', 'Formulir Tambah Data Siswa')
 
 @section('styles')
 <style>
@@ -25,135 +25,36 @@
 @endsection
 
 @section('content')
+@php
+    $provinsi = $provinsi ?? collect([
+        (object)['id' => 32, 'name' => 'JAWA BARAT'],
+        (object)['id' => 33, 'name' => 'JAWA TENGAH'],
+        (object)['id' => 31, 'name' => 'DKI JAKARTA'],
+        (object)['id' => 35, 'name' => 'JAWA TIMUR'],
+    ]);
+@endphp
+
 <div class="fade-in flex flex-1 flex-col justify-start mb-8">
     
     <!-- Top Action Bar -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 px-1">
         <div>
             <h3 class="text-[20px] md:text-[22px] font-bold text-gray-800 flex items-center gap-2">
-                <i class="ph-fill ph-chalkboard-teacher text-brand-blue text-2xl"></i>
-                Formulir Data GTK
+                <i class="ph-fill ph-student text-brand-blue text-2xl"></i>
+                Formulir Data Siswa
             </h3>
-            <p class="text-[13px] text-gray-500 font-medium mt-0.5">Lengkapi informasi GTK (Guru / Tenaga Kependidikan) untuk ditambahkan</p>
+            <p class="text-[13px] text-gray-500 font-medium mt-0.5">Lengkapi informasi siswa untuk ditambahkan</p>
         </div>
     </div>
-
-    <!-- Popup Modal Alert Sukses / Gagal (Kotak Popup Standar Web) -->
-    @if (session('success') || session('error') || session('failed') || $errors->any())
-    <div id="popupAlertModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <!-- Overlay backdrop blur -->
-        <div class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" onclick="closePopupModal()"></div>
-
-        <!-- Modal Content Container -->
-        <div id="popupAlertContent" class="bg-white rounded-[28px] w-full max-w-[400px] p-8 shadow-2xl relative z-10 transform transition-all scale-95 opacity-0 duration-300">
-            <div class="flex flex-col items-center text-center">
-
-            @if (session('success'))
-                <!-- Success Icon Badge -->
-                <div class="w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-6">
-                    <i class="ph-fill ph-check-circle text-[48px] text-emerald-500"></i>
-                </div>
-
-                <!-- Title -->
-                <h3 class="text-[22px] font-bold text-gray-900 mb-2">Input Data Berhasil!</h3>
-                
-                <!-- Description -->
-                <p class="text-gray-500 text-[14px] leading-relaxed mb-8">
-                    {{ session('success') }}
-                </p>
-
-                <!-- Action Button -->
-                <div class="w-full">
-                    <button onclick="closePopupModal()" type="button" class="w-full px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-[14px] transition-colors shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer">
-                        Mengerti
-                    </button>
-                </div>
-
-            @elseif (session('error') || session('failed') || $errors->any())
-                <!-- Error Icon Badge -->
-                <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-6">
-                    <i class="ph-fill ph-warning-circle text-[48px] text-red-500"></i>
-                </div>
-
-                <!-- Title -->
-                <h3 class="text-[22px] font-bold text-gray-900 mb-2">Gagal Menyimpan Data</h3>
-                
-                <!-- Description / Errors -->
-                <div class="w-full text-left bg-red-50 p-4 rounded-xl border border-red-100 mb-8 max-h-48 overflow-y-auto custom-scrollbar">
-                    @if(session('error'))
-                        <p class="font-medium text-red-700 text-center mb-2 text-[14px]">{{ session('error') }}</p>
-                    @endif
-
-                    @if(session('failed'))
-                        <p class="font-medium text-red-700 text-center mb-2 text-[14px]">{{ session('failed') }}</p>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="font-bold text-red-800 mb-1 flex items-center gap-1.5 text-[13px]">
-                            <i class="ph-bold ph-warning text-base"></i> Terdapat kesalahan formulir:
-                        </div>
-                        <ul class="list-disc pl-5 space-y-1 text-red-700 text-[13px]">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-
-                <!-- Action Button -->
-                <div class="w-full">
-                    <button onclick="closePopupModal()" type="button" class="w-full px-6 py-3.5 rounded-xl bg-red-500 text-white font-bold text-[14px] hover:bg-red-600 transition-colors shadow-lg shadow-red-500/30 cursor-pointer">
-                        Perbaiki Data
-                    </button>
-                </div>
-            @endif
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('popupAlertModal');
-            const content = document.getElementById('popupAlertContent');
-            if (modal && content) {
-                setTimeout(() => {
-                    content.classList.remove('scale-95', 'opacity-0');
-                    content.classList.add('scale-100', 'opacity-100');
-                }, 50);
-            }
-        });
-
-        function closePopupModal() {
-            const modal = document.getElementById('popupAlertModal');
-            const content = document.getElementById('popupAlertContent');
-            if (!modal || !content) return;
-
-            content.classList.remove('scale-100', 'opacity-100');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.remove();
-            }, 250);
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePopupModal();
-            }
-        });
-    </script>
-    @endif
 
     <!-- Form Container Card -->
     <div class="bg-white rounded-[24px] shadow-card p-6 md:p-10 w-full border border-gray-50">
-        <form action="{{ route('datamaster.gtk') }}" method="POST" id="formMasterGTK">
-            @csrf
-
-            <!-- SECTION 1: INFORMASI DATA PRIBADI & KEPEGAWAIAN GTK -->
+        <form onsubmit="event.preventDefault(); showToast('Data Siswa berhasil disimpan (Mode Preview)', 'success'); setTimeout(() => { window.location.href='{{ url('/admin/supervisor/datanasabah') }}'; }, 1000); return false;" id="formMasterSiswa">
+            <!-- SECTION 1: INFORMASI DATA PRIBADI SISWA -->
             <div class="mb-10">
                 <div class="flex items-center gap-3 mb-6 pb-3 border-b border-gray-100">
                     <div class="w-[5px] h-6 bg-brand-blue rounded-full"></div>
-                    <h4 class="text-[18px] font-bold text-gray-800">Informasi Pribadi & Kepegawaian</h4>
+                    <h4 class="text-[18px] font-bold text-gray-800">Informasi Pribadi Siswa</h4>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-5">
@@ -168,48 +69,42 @@
                         </div>
                     </div>
 
-                    <!-- Jabatan -->
+                    <!-- Jurusan -->
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-600 mb-2">
-                            Jabatan
+                            Jurusan
                         </label>
-                        <select name="jabatan" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
-                            <option value="" disabled {{ old('jabatan') ? '' : 'selected' }}>Pilih Jabatan</option>
-                            <option value="Guru" {{ old('jabatan') == 'Guru' ? 'selected' : '' }}>Guru</option>
-                            <option value="TU" {{ old('jabatan') == 'TU' ? 'selected' : '' }}>TU (Tata Usaha / Tenaga Kependidikan)</option>
+                        <select name="jurusan_id" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
+                            <option value="" disabled {{ old('jurusan_id') ? '' : 'selected' }}>Pilih Jurusan</option>
+                            <option value="1" {{ old('jurusan_id') == '1' ? 'selected' : '' }}>TKRO (Teknik Kendaraan Ringan Otomotif)</option>
+                            <option value="2" {{ old('jurusan_id') == '2' ? 'selected' : '' }}>TJKT (Teknik Jaringan Komputer & Telekomunikasi)</option>
+                            <option value="3" {{ old('jurusan_id') == '3' ? 'selected' : '' }}>PPLG (Pengembangan Perangkat Lunak & Gim)</option>
+                            <option value="4" {{ old('jurusan_id') == '4' ? 'selected' : '' }}>DPIB (Desain Pemodelan & Informasi Bangunan)</option>
+                            <option value="5" {{ old('jurusan_id') == '5' ? 'selected' : '' }}>MPLB (Manajemen Perkantoran & Layanan Bisnis)</option>
+                            <option value="6" {{ old('jurusan_id') == '6' ? 'selected' : '' }}>AKUNTANSI (Akuntansi & Keuangan Lembaga)</option>
+                            <option value="7" {{ old('jurusan_id') == '7' ? 'selected' : '' }}>SK (Seni Karawitan)</option>
                         </select>
                     </div>
 
-                    <!-- NUPTK -->
+                    <!-- NIS -->
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-600 mb-2">
-                            NUPTK
-                        </label>
-                        <div class="relative">
-                            <i class="ph ph-identification-badge absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                            <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="nuptk" value="{{ old('nuptk') }}" required class="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm">
-                        </div>
-                    </div>
-
-                    <!-- NIP -->
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-600 mb-2">
-                            NIP
+                            NIS
                         </label>
                         <div class="relative">
                             <i class="ph ph-identification-card absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                            <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="nip" value="{{ old('nip') }}" required class="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm">
+                            <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="nis" value="{{ old('nis') }}" required class="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm">
                         </div>
                     </div>
 
-                    <!-- NIK -->
+                    <!-- NISN -->
                     <div>
                         <label class="block text-[13px] font-semibold text-gray-600 mb-2">
-                            NIK
+                            NISN
                         </label>
                         <div class="relative">
                             <i class="ph ph-cardholder absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
-                            <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="nik" value="{{ old('nik') }}" required class="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm">
+                            <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="nisn" value="{{ old('nisn') }}" required class="w-full border border-gray-200 rounded-xl pl-11 pr-4 py-2.5 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm">
                         </div>
                     </div>
 
@@ -318,6 +213,8 @@
                         </label>
                         <select name="kab_kota" id="kabupaten" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
                             <option value="" disabled selected>Pilih Kabupaten</option>
+                            <option value="Ciamis">Kab. Ciamis</option>
+                            <option value="Tasikmalaya">Kab. Tasikmalaya</option>
                         </select>
                     </div>
 
@@ -328,6 +225,8 @@
                         </label>
                         <select name="kecamatan" id="kecamatan" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
                             <option value="" disabled selected>Pilih Kecamatan</option>
+                            <option value="Kawali">Kawali</option>
+                            <option value="Lumbung">Lumbung</option>
                         </select>
                     </div>
 
@@ -338,6 +237,8 @@
                         </label>
                         <select name="kelurahan" id="desa" required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 pr-10 text-[14px] text-gray-800 bg-white appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2218%22%20height%3D%2218%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236B7280%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:18px] bg-[right_1rem_center] bg-no-repeat focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 transition-all shadow-sm hover:border-gray-300 cursor-pointer">
                             <option value="" disabled selected>Pilih Desa</option>
+                            <option value="Kawali">Kawali</option>
+                            <option value="Karangpawitan">Karangpawitan</option>
                         </select>
                     </div>
 
@@ -356,109 +257,14 @@
 
             <!-- Submit Button Section -->
             <div class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
-                <button type="submit" id="btnSubmit" class="bg-gradient-to-r from-[#143657] to-[#316392] text-white px-7 py-3 rounded-xl text-[14px] font-bold flex items-center gap-2 hover:opacity-90 transition-all shadow-md cursor-pointer">
-                    <i class="ph-bold ph-floppy-disk text-lg"></i> Simpan Data GTK
+                <a href="{{ url('/admin/supervisor/datanasabah') }}" class="px-6 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-[14px] hover:bg-gray-200 transition-colors">
+                    Kembali
+                </a>
+                <button type="submit" id="btnSubmit" class="bg-gradient-to-r from-[#143657] to-[#316392] text-white px-7 py-3 rounded-xl text-[14px] font-bold flex items-center gap-2 hover:opacity-90 transition-all shadow-md">
+                    <i class="ph-bold ph-floppy-disk text-lg"></i> Simpan Data Siswa
                 </button>
             </div>
         </form>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-$(document).ready(function () {
-
-    // ==========================
-    // PROVINSI -> KABUPATEN
-    // ==========================
-    $('#provinsi').change(function () {
-        let id = $(this).val();
-
-        $('#kabupaten').html('<option value="" disabled selected>Pilih Kabupaten</option>');
-        $('#kecamatan').html('<option value="" disabled selected>Pilih Kecamatan</option>');
-        $('#desa').html('<option value="" disabled selected>Pilih Desa</option>');
-
-        if (!id) return;
-
-        $.ajax({
-            url: '/get-kabupaten/' + id,
-            type: 'GET',
-            success: function(data){
-                $.each(data, function(index, item){
-                    $('#kabupaten').append(
-                        '<option value="'+item.id+'">'+item.name+'</option>'
-                    );
-                });
-            },
-            error: function(xhr){
-                console.error('Gagal mengambil data kabupaten:', xhr.responseText);
-            }
-        });
-    });
-
-    // ==========================
-    // KABUPATEN -> KECAMATAN
-    // ==========================
-    $('#kabupaten').change(function () {
-        let id = $(this).val();
-
-        $('#kecamatan').html('<option value="" disabled selected>Pilih Kecamatan</option>');
-        $('#desa').html('<option value="" disabled selected>Pilih Desa</option>');
-
-        if (!id) return;
-
-        $.ajax({
-            url: '/get-kecamatan/' + id,
-            type: 'GET',
-            success: function(data){
-                $.each(data, function(index, item){
-                    $('#kecamatan').append(
-                        '<option value="'+item.id+'">'+item.name+'</option>'
-                    );
-                });
-            },
-            error: function(xhr){
-                console.error('Gagal mengambil data kecamatan:', xhr.responseText);
-            }
-        });
-    });
-
-    // ==========================
-    // KECAMATAN -> DESA
-    // ==========================
-    $('#kecamatan').change(function () {
-        let id = $(this).val();
-
-        $('#desa').html('<option value="" disabled selected>Pilih Desa</option>');
-
-        if (!id) return;
-
-        $.ajax({
-            url: '/get-desa/' + id,
-            type: 'GET',
-            success: function(data){
-                $.each(data, function(index, item){
-                    $('#desa').append(
-                        '<option value="'+item.id+'">'+item.name+'</option>'
-                    );
-                });
-            },
-            error: function(xhr){
-                console.error('Gagal mengambil data desa:', xhr.responseText);
-            }
-        });
-    });
-
-    // ==========================
-    // Form Submit Indicator
-    // ==========================
-    $('#formMasterGTK').on('submit', function() {
-        let btn = $('#btnSubmit');
-        btn.prop('disabled', true);
-        btn.html('<i class="ph ph-spinner animate-spin text-lg"></i> Menyimpan...');
-    });
-});
-</script>
 @endsection
