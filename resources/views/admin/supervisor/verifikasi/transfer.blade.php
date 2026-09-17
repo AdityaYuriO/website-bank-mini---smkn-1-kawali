@@ -18,7 +18,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
             opacity: 0;
             transform: translateY(10px);
         }
-
         to {
             opacity: 1;
             transform: translateY(0);
@@ -28,56 +27,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
 @endsection
 
 @section('content')
-@php
-    $perPage = request('per_page', 10);
-    if (!isset($bukti_tf)) {
-        $sampleItems = collect([
-            (object)[
-                'id' => 1,
-                'nama_pengirim' => 'Budi Pratama (BCA)',
-                'nama_penerima' => 'Siti Nurhaliza',
-                'jumlah_transfer' => 500000,
-                'no_hp_pengirim' => '081234567890',
-                'status_verifikasi' => 'pending',
-                'catatan' => 'Pembayaran Uang Kas Kelas XII RPL 1',
-                'datetime_tgl' => '15/09/2026 14:30',
-                'nominal_admin' => 2500,
-                'id_rekening' => '320701892003',
-                'bukti_foto' => 'uploads/sample_transfer.jpg',
-            ],
-            (object)[
-                'id' => 2,
-                'nama_pengirim' => 'Rini Astuti (BRI)',
-                'nama_penerima' => 'Ahmad Fauzi',
-                'jumlah_transfer' => 250000,
-                'no_hp_pengirim' => '085712345678',
-                'status_verifikasi' => 'berhasil',
-                'catatan' => 'Tabungan Mingguan Siswa',
-                'datetime_tgl' => '15/09/2026 11:15',
-                'nominal_admin' => 2500,
-                'id_rekening' => '320701892001',
-                'bukti_foto' => 'uploads/sample_transfer2.jpg',
-            ],
-            (object)[
-                'id' => 3,
-                'nama_pengirim' => 'Hendri Wijaya (Mandiri)',
-                'nama_penerima' => 'Dewi Sartika',
-                'jumlah_transfer' => 1000000,
-                'no_hp_pengirim' => '087812345678',
-                'status_verifikasi' => 'gagal',
-                'catatan' => 'Bukti buram dan tidak terbaca',
-                'datetime_tgl' => '14/09/2026 09:45',
-                'nominal_admin' => 2500,
-                'id_rekening' => '320701892002',
-                'bukti_foto' => 'uploads/sample_transfer3.jpg',
-            ],
-        ]);
-        $page = request('page', 1);
-        $bukti_tf = new \Illuminate\Pagination\LengthAwarePaginator($sampleItems, $sampleItems->count(), $perPage, $page, [
-            'path' => url('/admin/supervisor/verifikasi/transfer')
-        ]);
-    }
-@endphp
 
 <div id="viewTabelData" class="fade-in flex flex-1 flex-col justify-start">
     <!-- Section Title & Tabs -->
@@ -123,7 +72,7 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                     </button>
 
                     <div id="filterDropdownMenu" class="hidden absolute right-0 mt-2 w-full sm:w-72 origin-top-right rounded-2xl bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none p-4 z-50 border border-gray-100">
-                        <form onsubmit="event.preventDefault(); showToast('Export transfer berhasil diunduh (Mode Preview)', 'success'); toggleFilterDropdown(); return false;" class="space-y-4">
+                        <form action="{{ route('admin.supervisor.exportExcel') }}" method="GET" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-500 mb-1">Dari Tanggal</label>
                                 <input type="date" name="start_date" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#1c3a5a]">
@@ -142,9 +91,9 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                     </div>
                 </div>
                 @endif
-
             </div>
         </div>
+
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -170,71 +119,69 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                         <td class="py-4 px-2 border-b border-gray-50">{{ $item->no_hp_pengirim }}</td>
                         <td class="py-4 px-2 border-b border-gray-50 status-col">
                             @if ($item->status_verifikasi == 'pending')
-                            <span class="w-7 h-7 rounded-full bg-yellow-100 text-yellow-800 text-brand-blue flex items-center justify-center transition-colors shadow-sm">
+                            <span class="w-7 h-7 rounded-full bg-yellow-100 text-yellow-800 flex items-center justify-center transition-colors shadow-sm">
                                 <i class="ph ph-clock text-[20px]" title="Pending"></i>
                             </span>
                             @elseif($item->status_verifikasi == 'berhasil')
-                            <span class="w-7 h-7 rounded-full bg-green-100 text-green-800 text-brand-blue flex items-center justify-center transition-colors shadow-sm">
+                            <span class="w-7 h-7 rounded-full bg-green-100 text-green-800 flex items-center justify-center transition-colors shadow-sm">
                                 <i class="ph ph-check-circle text-[20px]" title="Berhasil"></i>
                             </span>
                             @else
-                            <span class="w-7 h-7 rounded-full bg-red-100 text-red-800 text-brand-blue flex items-center justify-center transition-colors shadow-sm">
+                            <span class="w-7 h-7 rounded-full bg-red-100 text-red-800 flex items-center justify-center transition-colors shadow-sm">
                                 <i class="ph ph-x-circle text-[20px]" title="Tolak"></i>
                             </span>
                             @endif
                         </td>
                         <td class="py-4 px-2 border-b border-gray-50 action-col">
                             <div class="flex items-center justify-center gap-2">
-                                <!-- Tombol Lihat (Mata) memanggil view Form -->
-                                <button onclick="viewDetail('{{ $item->nama_pengirim }}', '{{ $item->nama_penerima }}', 'Rp{{ number_format($item->jumlah_transfer, 0, ',', '.')}}', '{{ $item->id_rekening }}','Rp{{number_format($item->nominal_admin,0, ',', '.') }}', '{{ $item->no_hp_pengirim }}' ,  '{{ $item->catatan }}', '{{ $item->datetime_tgl }}', '' )" class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" title="Lihat Detail"><i class="ph-fill ph-eye text-[16px]"></i></button>
+                                <!-- Tombol Lihat Detail (Menggunakan Data Attributes) -->
+                                <button type="button" 
+                                    data-pengirim="{{ $item->nama_pengirim }}"
+                                    data-penerima="{{ $item->nama_penerima }}"
+                                    data-nominal="Rp{{ number_format($item->jumlah_transfer, 0, ',', '.') }}"
+                                    data-rek="{{ $item->id_rekening }}"
+                                    data-admin="Rp{{ number_format($item->nominal_admin, 0, ',', '.') }}"
+                                    data-telp="{{ $item->no_hp_pengirim }}"
+                                    data-catatan="{{ $item->catatan }}"
+                                    data-tanggal="{{ $item->datetime_tgl }}"
+                                    data-bukti="{{ asset(str_starts_with($item->bukti_foto, 'uploads/') || str_starts_with($item->bukti_foto, 'storage/') ? $item->bukti_foto : 'uploads/' . $item->bukti_foto) }}"
+                                    onclick="handleViewDetail(this)" 
+                                    class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" 
+                                    title="Lihat Detail">
+                                    <i class="ph-fill ph-eye text-[16px]"></i>
+                                </button>
 
                                 @if($item->status_verifikasi == 'pending')
-                                 <!-- Tombol Aksi Hanya Muncul Jika Status Masih Pending -->
-                                 <button type="button" onclick="openConfirmModal({
-                                     title: 'Setujui Transaksi?',
-                                     message: 'Apakah Anda yakin ingin menyetujui verifikasi transfer ini?',
-                                     type: 'success',
-                                     confirmText: 'Ya, Setujui',
-                                     onConfirm: () => {
-                                         const row = this.closest('tr');
-                                         if (row) {
-                                             row.querySelector('.status-col').innerHTML = '<span class=\'w-7 h-7 rounded-full bg-green-100 text-green-800 flex items-center justify-center transition-colors shadow-sm\'><i class=\'ph ph-check-circle text-[20px]\' title=\'Berhasil\'></i></span>';
-                                             row.querySelector('.action-col').innerHTML = '<span class=\'text-[9px] text-gray-400 font-italic\'><i class=\'ph ph-lock\'></i> Telah Diverifikasi</span>';
-                                         }
-                                         showToast('Transfer {{ $item->nama_pengirim }} berhasil disetujui (Mode Preview)', 'success');
-                                     }
-                                 })" class="w-[30px] h-[30px] rounded-full bg-[#d1fae5] text-[#10a163] flex items-center justify-center hover:bg-green-200 transition-colors" title="Setujui">
-                                     <i class="ph-bold ph-check-circle text-[16px]"></i>
-                                 </button>
+                                    <!-- Form Setujui -->
+                                    <form id="form-approve-tf-{{ $item->id }}" action="{{ route('admin.supervisor.verifikasiTf', $item->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status_verifikasi" value="berhasil">
+                                        <button type="button" onclick="confirmAction('form-approve-tf-{{ $item->id }}', 'Setujui Transaksi?', 'Apakah Anda yakin ingin menyetujui verifikasi transfer ini?', 'success', 'Ya, Setujui')" class="w-[30px] h-[30px] rounded-full bg-[#d1fae5] text-[#10a163] flex items-center justify-center hover:bg-green-200 transition-colors" title="Setujui">
+                                            <i class="ph-bold ph-check-circle text-[16px]"></i>
+                                        </button>
+                                    </form>
 
-                                 <button type="button" onclick="openConfirmModal({
-                                     title: 'Tolak Transaksi?',
-                                     message: 'Apakah Anda yakin ingin membatalkan verifikasi transfer ini?',
-                                     type: 'danger',
-                                     confirmText: 'Ya, Tolak',
-                                     onConfirm: () => {
-                                         const row = this.closest('tr');
-                                         if (row) {
-                                             row.querySelector('.status-col').innerHTML = '<span class=\'w-7 h-7 rounded-full bg-red-100 text-red-800 flex items-center justify-center transition-colors shadow-sm\'><i class=\'ph ph-x-circle text-[20px]\' title=\'Tolak\'></i></span>';
-                                             row.querySelector('.action-col').innerHTML = '<span class=\'text-[9px] text-gray-400 font-italic\'><i class=\'ph ph-lock\'></i> Telah Diverifikasi</span>';
-                                         }
-                                         showToast('Transfer {{ $item->nama_pengirim }} berhasil ditolak (Mode Preview)', 'error');
-                                     }
-                                 })" class="w-[30px] h-[30px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Tolak">
-                                     <i class="ph-bold ph-x-circle text-[16px]"></i>
-                                 </button>
+                                    <!-- Form Tolak -->
+                                    <form id="form-reject-tf-{{ $item->id }}" action="{{ route('admin.supervisor.verifikasiTf', $item->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status_verifikasi" value="gagal">
+                                        <button type="button" onclick="confirmAction('form-reject-tf-{{ $item->id }}', 'Tolak Transaksi?', 'Apakah Anda yakin ingin membatalkan verifikasi transfer ini?', 'danger', 'Ya, Tolak')" class="w-[30px] h-[30px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Tolak">
+                                            <i class="ph-bold ph-x-circle text-[16px]"></i>
+                                        </button>
+                                    </form>
                                 @else
-                                <!-- Tampilkan indikator bahwa aksi sudah terkunci -->
-                                <span class="text-[9px] text-gray-400 font-italic">
-                                    <i class="ph ph-lock"></i> Telah Diverifikasi
-                                </span>
+                                    <span class="text-[9px] text-gray-400 font-italic">
+                                        <i class="ph ph-lock"></i> Telah Diverifikasi
+                                    </span>
                                 @endif
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="py-4 px-2 border-b text-gray-500 border-gray-50" colspan="7">Maaf Data Kosong</td>
+                        <td class="py-4 px-2 border-b text-gray-500 border-gray-50 text-center" colspan="7">Maaf Data Kosong</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -247,29 +194,33 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
     </div>
 </div>
 
-<!-- ================= CRUD VIEWS (Separated Files) ================= -->
+<!-- ================= CRUD VIEWS ================= -->
 @include('admin.supervisor.verifikasi.transfer.detail')
 @endsection
 
 @section('scripts')
 <script>
-    // Lihat Detail
-    function viewDetail(pengirim, penerima, nominal, rek, admin, telp, catatan, tgl_pengirim, bukti) {
-        document.getElementById('detail_pengirim').value = pengirim;
-        document.getElementById('detail_penerima').value = penerima;
-        document.getElementById('detail_nominal').value = nominal;
-        document.getElementById('detail_rek_penerima').value = rek;
-        document.getElementById('detail_telepon').value = telp;
-        document.getElementById('detail_admin').value = admin;
+    // Handler Detail menggunakan Data Attributes
+    function handleViewDetail(button) {
+        const d = button.dataset;
+        viewDetail(d.pengirim, d.penerima, d.nominal, d.rek, d.admin, d.telp, d.catatan, d.tanggal, d.bukti);
+    }
 
-        document.getElementById('detail_tanggal').value = tgl_pengirim;
-        document.getElementById('detail_catatan').value = catatan;
+    function viewDetail(pengirim, penerima, nominal, rek, admin, telp, catatan, tgl_pengirim, bukti) {
+        document.getElementById('detail_pengirim').value = pengirim || '';
+        document.getElementById('detail_penerima').value = penerima || '';
+        document.getElementById('detail_nominal').value = nominal || '';
+        document.getElementById('detail_rek_penerima').value = rek || '';
+        document.getElementById('detail_telepon').value = telp || '';
+        document.getElementById('detail_admin').value = admin || '';
+
+        document.getElementById('detail_tanggal').value = tgl_pengirim || '';
+        document.getElementById('detail_catatan').value = catatan || '';
 
         const placeholder = document.getElementById('detail_bukti_container');
         const imgTag = document.getElementById('detail_bukti_img');
         const pdfTag = document.getElementById('detail_bukti_pdf');
 
-        // Reset state
         placeholder.classList.add('hidden');
         imgTag.classList.add('hidden');
         pdfTag.classList.add('hidden');
@@ -293,14 +244,34 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
         switchView('detail');
     }
 
-    // Pindah antara Tabel Data dan Detail
+    // Handler Konfirmasi Modal yang Aman
+    function confirmAction(formId, title, message, type, confirmText) {
+        if (typeof openConfirmModal === 'function') {
+            openConfirmModal({
+                title: title,
+                message: message,
+                type: type,
+                confirmText: confirmText,
+                onConfirm: () => {
+                    const form = document.getElementById(formId);
+                    if (form) form.submit();
+                }
+            });
+        } else {
+            // Fallback jika modal custom tidak ada
+            if (confirm(message)) {
+                const form = document.getElementById(formId);
+                if (form) form.submit();
+            }
+        }
+    }
+
     function switchView(viewName) {
         const views = {
             'tabel': document.getElementById('viewTabelData'),
             'detail': document.getElementById('viewDetailData')
         };
 
-        // Sembunyikan semua view
         Object.values(views).forEach(v => {
             if (v) {
                 v.classList.add('hidden');
@@ -308,7 +279,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
             }
         });
 
-        // Tampilkan view yang dipilih
         const activeView = views[viewName];
         if (activeView) {
             activeView.classList.remove('hidden');
@@ -333,7 +303,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
         menu.classList.toggle('hidden');
     }
 
-    // Menutup dropdown jika user klik di luar area filter
     window.addEventListener('click', function(e) {
         const menu = document.getElementById('filterDropdownMenu');
         const container = document.getElementById('filterDropdownContainer');

@@ -7,53 +7,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
 @section('header_subtitle', 'Lorem Ipsum is simply dummy text of the printing.')
 
 @section('content')
-@php
-    $perPage = request('per_page', 10);
-    if (!isset($data)) {
-        $sampleItems = collect([
-            (object)[
-                'id' => 1,
-                'user' => (object)[
-                    'name' => 'Rina Anggraeni, S.Kom',
-                    'email' => 'rina.cs@smkn1kawali.sch.id',
-                    'role' => (object)['nama_role' => 'Customer Service'],
-                    'role2' => null,
-                ],
-                'status' => 'pending',
-                'created_at' => \Carbon\Carbon::now()->subMinutes(15),
-                'waktu_verifikasi' => null,
-            ],
-            (object)[
-                'id' => 2,
-                'user' => (object)[
-                    'name' => 'Dedi Supriadi',
-                    'email' => 'dedi.teller@smkn1kawali.sch.id',
-                    'role' => (object)['nama_role' => 'Teller'],
-                    'role2' => null,
-                ],
-                'status' => 'disetujui',
-                'created_at' => \Carbon\Carbon::now()->subHours(2),
-                'waktu_verifikasi' => \Carbon\Carbon::now()->subHours(1)->format('Y-m-d H:i:s'),
-            ],
-            (object)[
-                'id' => 3,
-                'user' => (object)[
-                    'name' => 'Asep Saepuloh',
-                    'email' => 'asep.cs@smkn1kawali.sch.id',
-                    'role' => (object)['nama_role' => 'Customer Service'],
-                    'role2' => (object)['nama_role' => 'Teller'],
-                ],
-                'status' => 'ditolak',
-                'created_at' => \Carbon\Carbon::now()->subDays(1),
-                'waktu_verifikasi' => \Carbon\Carbon::now()->subDays(1)->addMinutes(10)->format('Y-m-d H:i:s'),
-            ],
-        ]);
-        $page = request('page', 1);
-        $data = new \Illuminate\Pagination\LengthAwarePaginator($sampleItems, $sampleItems->count(), $perPage, $page, [
-            'path' => url('/admin/supervisor/verifikasi/login')
-        ]);
-    }
-@endphp
 
 <div id="viewTabel" class="fade-in flex flex-1 flex-col justify-start">
 
@@ -106,19 +59,14 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                     </select>
                 </div>
                 @if($data->count() > 0)
-                <button type="button" onclick="openConfirmModal({
-                    title: 'Hapus Seluruh Data Login?',
-                    message: 'Apakah Anda yakin ingin menghapus <strong>SELURUH data verifikasi login</strong>? Tindakan ini tidak dapat dibatalkan.',
-                    type: 'danger',
-                    confirmText: 'Ya, Hapus Semua',
-                    onConfirm: () => {
-                        document.querySelector('table tbody').innerHTML = '<tr><td colspan=\'6\' class=\'text-center py-8 text-gray-500\'>Tidak ada permintaan login</td></tr>';
-                        showToast('Seluruh data verifikasi login berhasil dihapus (Mode Preview)', 'success');
-                    }
-                })" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 font-medium text-xs sm:text-[13px] rounded-xl transition-all border border-red-200">
-                    <i class="ph ph-trash text-base sm:text-lg"></i>
-                    <span>Hapus Semua Data</span>
-                </button>
+                <form id="form-destroy-all-login" action="{{ route('admin.supervisor.verifikasi.login.destroyAll') }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="confirmAction('form-destroy-all-login', 'Hapus Seluruh Data Login?', 'Apakah Anda yakin ingin menghapus SELURUH data verifikasi login? Tindakan ini tidak dapat dibatalkan.', 'danger', 'Ya, Hapus Semua')" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 font-medium text-xs sm:text-[13px] rounded-xl transition-all border border-red-200">
+                        <i class="ph ph-trash text-base sm:text-lg"></i>
+                        <span>Hapus Semua Data</span>
+                    </button>
+                </form>
                 @endif
             </div>
         </div>
@@ -149,16 +97,16 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                         </td>
 
                         <td class="py-4 px-2 border-b border-gray-50">
-                            {{ $item->user->name }}
+                            {{ $item->user->name ?? '-' }}
                         </td>
 
                         <td class="py-4 px-2 border-b border-gray-50">
-                            {{ $item->user->email }}
+                            {{ $item->user->email ?? '-' }}
                         </td>
 
                         <td class="py-4 px-2 border-b border-gray-50">
                             {{ $item->user->role->nama_role ?? '-' }}
-                            @if($item->user->role2)
+                            @if(isset($item->user->role2) && $item->user->role2)
                             <span class="text-xs text-blue-600 font-bold">(& {{ $item->user->role2->nama_role }})</span>
                             @endif
                         </td>
@@ -189,51 +137,38 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                         </td>
                         <td class="py-4 px-2 border-b border-gray-50 action-col">
                             <div class="flex items-center justify-center gap-2">
+                                <!-- Tombol Lihat Detail (Aman via Data Attribute) -->
                                 <button
                                     type="button"
-                                    onclick="viewDetail(
-                                            '{{ $item->id }}',
-                                            '{{ $item->user->name }}',
-                                            '{{ $item->user->email }}',
-                                            '{{ $item->user->role->nama_role ?? '-' }} {{ $item->user->role2 ? '& ' . $item->user->role2->nama_role : '' }}',
-                                            '{{ $item->status }}',
-                                            '{{ $item->created_at->format('d/m/Y H:i') }}',
-                                            '{{ $item->waktu_verifikasi ? \Carbon\Carbon::parse($item->waktu_verifikasi)->format('d/m/Y H:i') : '-' }}'
-                                        )"
-                                    class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" title="Lihat Detail"><i class="ph-fill ph-eye text-[16px]"></i>
+                                    data-id="{{ $item->id }}"
+                                    data-nama="{{ $item->user->name ?? '-' }}"
+                                    data-email="{{ $item->user->email ?? '-' }}"
+                                    data-role="{{ $item->user->role->nama_role ?? '-' }} {{ (isset($item->user->role2) && $item->user->role2) ? '& ' . $item->user->role2->nama_role : '' }}"
+                                    data-status="{{ $item->status }}"
+                                    data-waktu-login="{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}"
+                                    data-waktu-verifikasi="{{ $item->waktu_verifikasi ? \Carbon\Carbon::parse($item->waktu_verifikasi)->format('d/m/Y H:i') : '-' }}"
+                                    onclick="handleViewDetail(this)"
+                                    class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" title="Lihat Detail">
+                                    <i class="ph-fill ph-eye text-[16px]"></i>
                                 </button>
 
                                 @if($item->status == 'pending')
 
-                                <button type="button" onclick="openConfirmModal({
-                                    title: 'Setujui Login?',
-                                    message: 'Apakah Anda yakin ingin menyetujui permintaan login untuk <strong>{{ $item->user->name }}</strong>?',
-                                    type: 'success',
-                                    confirmText: 'Ya, Setujui',
-                                    onConfirm: () => {
-                                        const row = this.closest('tr');
-                                        row.querySelector('.status-col').innerHTML = '<span class=\'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs\'><i class=\'ph ph-check-circle\'></i> Disetujui</span>';
-                                        row.querySelector('.action-col').innerHTML = '<div class=\'flex items-center justify-center gap-2\'><button type=\'button\' onclick=\'viewDetail({{ $item->id }}, \"{{ $item->user->name }}\", \"{{ $item->user->email }}\", \"{{ $item->user->role->nama_role }}\", \"disetujui\", \"{{ $item->created_at->format('d/m/Y H:i') }}\", \"Baru saja\")\' class=\'w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors\' title=\'Lihat Detail\'><i class=\'ph-fill ph-eye text-[16px]\'></i></button><span class=\'text-[10px] text-gray-400\'><i class=\'ph ph-lock\'></i> Selesai</span></div>';
-                                        showToast('Login {{ $item->user->name }} berhasil disetujui (Mode Preview)', 'success');
-                                    }
-                                })" class="w-[30px] h-[30px] rounded-full bg-[#d1fae5] text-[#10a163] flex items-center justify-center hover:bg-green-200 transition-colors" title="Setujui">
-                                    <i class="ph-bold ph-check-circle text-[16px]"></i>
-                                </button>
+                                <!-- Form Setujui -->
+                                <form id="form-approve-login-{{ $item->id }}" action="{{ route('admin.supervisor.verifikasi.login.setujui', $item->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="button" onclick="confirmAction('form-approve-login-{{ $item->id }}', 'Setujui Login?', 'Apakah Anda yakin ingin menyetujui permintaan login ini?', 'success', 'Ya, Setujui')" class="w-[30px] h-[30px] rounded-full bg-[#d1fae5] text-[#10a163] flex items-center justify-center hover:bg-green-200 transition-colors" title="Setujui">
+                                        <i class="ph-bold ph-check-circle text-[16px]"></i>
+                                    </button>
+                                </form>
 
-                                <button type="button" onclick="openConfirmModal({
-                                    title: 'Tolak Login?',
-                                    message: 'Apakah Anda yakin ingin menolak permintaan login untuk <strong>{{ $item->user->name }}</strong>?',
-                                    type: 'danger',
-                                    confirmText: 'Ya, Tolak',
-                                    onConfirm: () => {
-                                        const row = this.closest('tr');
-                                        row.querySelector('.status-col').innerHTML = '<span class=\'inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs\'><i class=\'ph ph-x-circle\'></i> Ditolak</span>';
-                                        row.querySelector('.action-col').innerHTML = '<div class=\'flex items-center justify-center gap-2\'><button type=\'button\' onclick=\'viewDetail({{ $item->id }}, \"{{ $item->user->name }}\", \"{{ $item->user->email }}\", \"{{ $item->user->role->nama_role }}\", \"ditolak\", \"{{ $item->created_at->format('d/m/Y H:i') }}\", \"Baru saja\")\' class=\'w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors\' title=\'Lihat Detail\'><i class=\'ph-fill ph-eye text-[16px]\'></i></button><span class=\'text-[10px] text-gray-400\'><i class=\'ph ph-lock\'></i> Selesai</span></div>';
-                                        showToast('Login {{ $item->user->name }} berhasil ditolak (Mode Preview)', 'error');
-                                    }
-                                })" class="w-[30px] h-[30px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Tolak">
-                                    <i class="ph-bold ph-x-circle text-[16px]"></i>
-                                </button>
+                                <!-- Form Tolak -->
+                                <form id="form-reject-login-{{ $item->id }}" action="{{ route('admin.supervisor.verifikasi.login.tolak', $item->id) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="button" onclick="confirmAction('form-reject-login-{{ $item->id }}', 'Tolak Login?', 'Apakah Anda yakin ingin menolak permintaan login ini?', 'danger', 'Ya, Tolak')" class="w-[30px] h-[30px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Tolak">
+                                        <i class="ph-bold ph-x-circle text-[16px]"></i>
+                                    </button>
+                                </form>
 
                                 @else
 
@@ -245,16 +180,13 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
                                 @endif
 
                             </div>
-
                         </td>
-
                     </tr>
 
                     @empty
 
                     <tr>
-                        <td colspan="6"
-                            class="text-center py-8 text-gray-500">
+                        <td colspan="6" class="text-center py-8 text-gray-500">
                             Tidak ada permintaan login
                         </td>
                     </tr>
@@ -275,36 +207,55 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
 
 @section('scripts')
 <script>
-    function switchView(view) {
-        document.getElementById('viewTabel')
-            .classList.add('hidden');
-
-        document.getElementById('viewDetailLogin')
-            .classList.add('hidden');
-
-        document.getElementById(view)
-            .classList.remove('hidden');
+    // Handler untuk tombol detail
+    function handleViewDetail(button) {
+        const d = button.dataset;
+        viewDetail(d.id, d.nama, d.email, d.role, d.status, d.waktuLogin, d.waktuVerifikasi);
     }
 
-    function viewDetail(
-        id,
-        nama,
-        email,
-        role,
-        status,
-        waktuLogin,
-        waktuVerifikasi
-    ) {
-
-        document.getElementById('detail_id').value = id;
-        document.getElementById('detail_nama').value = nama;
-        document.getElementById('detail_email').value = email;
-        document.getElementById('detail_role').value = role;
-        document.getElementById('detail_status').value = status;
-        document.getElementById('detail_login').value = waktuLogin;
-        document.getElementById('detail_verifikasi').value = waktuVerifikasi;
+    function viewDetail(id, nama, email, role, status, waktuLogin, waktuVerifikasi) {
+        if(document.getElementById('detail_id')) document.getElementById('detail_id').value = id || '';
+        if(document.getElementById('detail_nama')) document.getElementById('detail_nama').value = nama || '';
+        if(document.getElementById('detail_email')) document.getElementById('detail_email').value = email || '';
+        if(document.getElementById('detail_role')) document.getElementById('detail_role').value = role || '';
+        if(document.getElementById('detail_status')) document.getElementById('detail_status').value = status || '';
+        if(document.getElementById('detail_login')) document.getElementById('detail_login').value = waktuLogin || '';
+        if(document.getElementById('detail_verifikasi')) document.getElementById('detail_verifikasi').value = waktuVerifikasi || '';
 
         switchView('viewDetailLogin');
+    }
+
+    // Function Konfirmasi Universal (Mendukung Modal Custom & Fallback Native Confirm Browser)
+    function confirmAction(formId, title, message, type, confirmText) {
+        if (typeof openConfirmModal === 'function') {
+            openConfirmModal({
+                title: title,
+                message: message,
+                type: type,
+                confirmText: confirmText,
+                onConfirm: () => {
+                    const form = document.getElementById(formId);
+                    if (form) form.submit();
+                }
+            });
+        } else {
+            // Fallback jika modal custom tidak ada/error
+            if (confirm(message.replace(/<[^>]*>?/gm, ''))) {
+                const form = document.getElementById(formId);
+                if (form) form.submit();
+            }
+        }
+    }
+
+    function switchView(view) {
+        const tabelView = document.getElementById('viewTabel');
+        const detailView = document.getElementById('viewDetailLogin');
+
+        if (tabelView) tabelView.classList.add('hidden');
+        if (detailView) detailView.classList.add('hidden');
+
+        const activeView = document.getElementById(view);
+        if (activeView) activeView.classList.remove('hidden');
     }
 
     function changePerPage(value) {

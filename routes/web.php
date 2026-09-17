@@ -12,7 +12,7 @@ use App\Http\Controllers\supervisor\DataPetugasController;
 use App\Http\Controllers\rekeningController;
 use App\Http\Controllers\alamatController;
 use App\Http\Controllers\landingPageController;
-use App\Http\Controllers\adminController;
+use App\Http\Controllers\AdminSupervisorController;
 use App\Models\User;
 use App\Models\VerifikasiLogin;
 use Illuminate\Support\Facades\Auth;
@@ -264,5 +264,16 @@ Route::prefix('admin')->group(function () {
     Route::get('/teller/history-nasabah', fn() => view('admin.teller.dashboard'))->name('admin.teller.history_nasabah');
 });
 
-Route::get('/admin/supervisor/dashboard', [AdminController::class, 'dashboardSupervisor'])->name('admin.supervisor.dashboard');
-Route::get('/admin/supervisor/verifikasi/transfer', [AdminController::class, 'verifikasiTFF'])->name('admin.supervisor.verifikasiTransfer');
+
+// Route Supervisor
+Route::get('/admin/supervisor/dashboard', [AdminSupervisorController::class, 'dashboardSupervisor'])->name('admin.supervisor.dashboard');
+
+Route::get('/admin/supervisor/verifikasi/transfer', [AdminSupervisorController::class, 'verifikasiTransferSupervisor'])->name('admin.supervisor.verifikasi.transfer');
+Route::get('/admin/supervisor/verifikasi/transfer/search', [AdminSupervisorController::class, 'searchDataSupervisor'])->name('admin.supervisor.searchData');
+Route::get('/admin/supervisor/verifikasi/transfer/export', [AdminSupervisorController::class, 'exportExcelSupervisor'])->name('admin.supervisor.exportExcel');
+Route::patch('/admin/supervisor/verifikasi/status{id}', [AdminSupervisorController::class, 'verifikasiTf'])->name('admin.supervisor.verifikasiTf');
+
+Route::get('/admin/supervisor/verifikasi/login', [AdminSupervisorController::class, 'verifikasiLogin'])->name('admin.supervisor.verifikasi.login');
+Route::post('/admin/supervisor/verifikasi-login/{id}/setujui', [AdminSupervisorController::class, 'setujuiLogin'])->name('admin.supervisor.verifikasi.login.setujui');
+Route::post('/admin/supervisor/verifikasi-login/{id}/tolak', [AdminSupervisorController::class, 'tolakLogin'])->name('admin.supervisor.verifikasi.login.tolak');
+Route::delete('/admin/supervisor/verifikasi/login/destroy-all', [AdminSupervisorController::class, 'destroyAllLogin'])->name('admin.supervisor.verifikasi.login.destroyAll');

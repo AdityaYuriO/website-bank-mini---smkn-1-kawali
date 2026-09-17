@@ -7,20 +7,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
 @section('header_subtitle', 'Lorem Ipsum is simply dummy text of the printing.')
 
 @section('content')
-@php
-    $totalSaldoTabungan = $totalSaldoTabungan ?? 145850000;
-    $adminTotal = $adminTotal ?? 3500000;
-    $adminAntarNasabah = $adminAntarNasabah ?? 1850000;
-    $totalPendingRegistrasi = $totalPendingRegistrasi ?? 3;
-    $totalPendingTransfer = $totalPendingTransfer ?? 2;
-    $nasabahPending = $nasabahPending ?? collect([
-        (object)['id' => 1, 'nama_nasabah' => 'Ahmad Fauzi', 'nis_nip' => '212210045']
-    ]);
-    $nasabahTfPending = $nasabahTfPending ?? collect([
-        (object)['id' => 1, 'nama_penerima' => 'Siti Nurhaliza', 'datetime_tgl' => '15 Sep 2026 14:30']
-    ]);
-@endphp
-
 <div id="viewMain" class="fade-in block">
     <!-- Statistics Cards -->
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
