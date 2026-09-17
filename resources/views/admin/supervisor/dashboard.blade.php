@@ -11,8 +11,6 @@ Selamat Datang, {{ $user->name ?? 'Administrator' }}!
     $totalSaldoTabungan = $totalSaldoTabungan ?? 145850000;
     $adminTotal = $adminTotal ?? 3500000;
     $adminAntarNasabah = $adminAntarNasabah ?? 1850000;
-    $totalNasabah = $totalNasabah ?? 420;
-    $totalPending = $totalPending ?? 5;
     $totalPendingRegistrasi = $totalPendingRegistrasi ?? 3;
     $totalPendingTransfer = $totalPendingTransfer ?? 2;
     $nasabahPending = $nasabahPending ?? collect([

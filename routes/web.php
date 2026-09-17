@@ -12,6 +12,7 @@ use App\Http\Controllers\supervisor\DataPetugasController;
 use App\Http\Controllers\rekeningController;
 use App\Http\Controllers\alamatController;
 use App\Http\Controllers\landingPageController;
+use App\Http\Controllers\adminController;
 use App\Models\User;
 use App\Models\VerifikasiLogin;
 use Illuminate\Support\Facades\Auth;
@@ -90,7 +91,7 @@ Route::middleware(['role:customerservice'])->group(function () {
 
     Route::get('/data-orang/{nomor}', [siswaController::class, 'getData']);
 
-    route::get('/customerservice/dashboard', [csController::class, 'index'])->name('cs.dashboard');
+    Route::get('/customerservice/dashboard', [csController::class, 'index'])->name('cs.dashboard');
     Route::get('/customerservice/keloladata', [rekeningController::class, 'keloladata'])->name('costumerservice.keloladata');
     Route::post('/customer/tambah', [rekeningController::class, 'store'])->name('tambah.rekening');
     Route::get('/customer/detail/{id}', [csController::class, 'detail'])->name('detail.nasabah.cs');
@@ -106,7 +107,7 @@ Route::middleware(['role:customerservice'])->group(function () {
 
 //ROLE SUPERVISOR
 Route::middleware(['role:supervisor'])->group(function () {
-    route::get('/supervisor/dashboard', [superVisorController::class, 'index'])->name('supervisor.dashboard');
+    Route::get('/supervisor/dashboard', [superVisorController::class, 'index'])->name('supervisor.dashboard');
 
     Route::get('/supervisor/datanasabah', [superVisorController::class, 'nasabah'])->name('supervisor.datanasabah');
 
@@ -263,4 +264,5 @@ Route::prefix('admin')->group(function () {
     Route::get('/teller/history-nasabah', fn() => view('admin.teller.dashboard'))->name('admin.teller.history_nasabah');
 });
 
-
+Route::get('/admin/supervisor/dashboard', [AdminController::class, 'dashboardSupervisor'])->name('admin.supervisor.dashboard');
+Route::get('/admin/supervisor/verifikasi/transfer', [AdminController::class, 'verifikasiTFF'])->name('admin.supervisor.verifikasiTransfer');
