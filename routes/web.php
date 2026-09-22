@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\Auth\lupaPasswordController;
 use App\Models\Rekening;
+use App\Http\Controllers\adminController;
 
 //halaman utama
 Route::get('/', [landingPageController::class, 'index'])->name('/');
@@ -83,12 +84,12 @@ Route::middleware(['role:teller'])->group(function () {
 });
 
 
+    Route::get('/data-orang/{nomor}', [siswaController::class, 'getData']);
 
 
 //customer service
 Route::middleware(['role:customerservice'])->group(function () {
 
-    Route::get('/data-orang/{nomor}', [siswaController::class, 'getData']);
 
     route::get('/customerservice/dashboard', [csController::class, 'index'])->name('cs.dashboard');
     Route::get('/customerservice/keloladata', [rekeningController::class, 'keloladata'])->name('costumerservice.keloladata');
@@ -219,3 +220,49 @@ Route::get('/cek-rekening/{id}', [Bukti_tfController::class, 'cekRekening']);
 Route::get('/get-kabupaten/{id}', [alamatController::class, 'getKabupaten']);
 Route::get('/get-kecamatan/{id}', [alamatController::class, 'getKecamatan']);
 Route::get('/get-desa/{id}', [alamatController::class, 'getDesa']);
+
+
+///admin
+Route::get('/halaman/utama/admin', [adminController::class, 'index'])->name('halaman.utama.admin');
+
+///Supervisor///
+
+//petugas
+Route::get('halaman/petugas', [adminController::class, 'halamanPetugas'])->name('halaman.petugas.admin');
+Route::put('/update/petugash/admin/{id}', [adminController::class, 'update'])->name('update.petugas.admin');
+Route::post('/tambah/petugas/admin', [adminController::class, 'store'])->name('tambah.petugas.admin');
+Route::delete('/hapus/petugas/admin/{id}', [adminController::class, 'destroy'])->name('hapus.petugas.admin');
+Route::get('/template/import/petugas', [adminController::class, 'downloadTemplate'])->name('template.petugas.admin');
+Route::post('/import/petugas/admin', [adminController::class, 'importExcel'])->name('import.petugas.admin');
+
+//Nasabah
+Route::get('/halaman/nasabah', [adminController::class, 'halamanNasabah'])->name('halaman.nasabah.admin');
+Route::get('/halaman/detail/nasabah/{id}', [adminController::class, 'detailNasabah'])->name('detail.nasabah.admin');
+Route::get('/print/nasabah/{id}', [adminController::class, 'print'])->name('print.nasabah.admin');
+Route::get('/data/master', [adminController::class, 'halamanDataMaster'])->name('master.siswa.admin');
+Route::get('/data/master/GTK', [adminController::class, 'halamanMasterGTK'])->name('master.gtk.admin');
+Route::post('/data/master/siswa/admin', [adminController::class, 'dataMaster'])->name('data.siswa.admin');
+Route::post('/data/master/gtk/admin', [adminController::class, 'dataMasterGTK'])->name('data.gtk.admin');
+
+//verifikasi Nasabah
+Route::get('/verifikasi/nasabah/admin', [adminController::class, 'verifikasiNasabah'])->name('verifikasi.nasabah.admin');
+Route::post('/verifikasi/aktif/nasabah/admin/{id}', [adminController::class, 'aktif'])->name('aktif.nasabah.admin');
+Route::delete('/hapus/nasabah/admin/{id}', [adminController::class, 'destroyNasabah'])->name('hapus.nasabah.admin');
+Route::get('/detail/nasabah/admin/{id}', [adminController::class, 'detail'])->name('detail.nasabah.admin.verif');
+Route::get('/halaman/revisi/admin/{id}', [adminController::class, 'halamanRevisi'])->name('halaman.revisi.nasabah.admin');
+Route::put('/revisi/nasabah/admin/{id}', [adminController::class, 'revisi'])->name('revisi.nasabah.admin');
+
+///Customer Service///
+Route::get('/halaman/utama/costumer/admin', [adminController::class, 'dashboardCS'])->name('halaman.utama.cs.admin');
+
+Route::get('/kelola/data/nasabah/cs/admin', [adminController::class, 'keloladata'])->name('kelola.data.cs.admin');
+// Route::get('/detail/kelola/data/cs/admin', [adminController::class, 'detailCs'])->name('detail.kelola.data.admin');
+Route::post('/tambah/nasabah/admin', [adminController::class, 'storeNasabah'])->name('tambah.nasabah.admin');
+Route::get('/print/nasabah/admin/{id}', [adminController::class, 'printNasabah'])->name('print.nasabah.admin.cs');
+Route::delete('/hapus/nasabah/cs/admin/{id}', [adminController::class, 'destroyNasabahCs'])->name('hapus.nasabah.cs.admin');
+Route::get('/update/nasabah/admin/cs/{id}', [adminController::class, 'editNasabah'])->name('halaman.edit.nasabah.admin');
+Route::put('/update/data/nasabah/admin{id}', [adminController::class, 'updateNasabah'])->name('update.data.nasabah.admin');
+Route::get('/download/template/nasabah/admin', [adminController::class, 'downloadTemplateNasabah'])->name('template.nasabah.admin');
+Route::get('/halaman/import/nasabah/admin', [adminController::class, 'halamanImportNasabah'])->name('halaman.import.nasabah.admin');
+Route::post('/import/nasabah/admin', [adminController::class, 'importNasabah'])->name('import.nasabah.admin');
+

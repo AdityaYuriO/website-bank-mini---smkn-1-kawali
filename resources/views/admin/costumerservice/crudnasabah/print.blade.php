@@ -1,40 +1,9 @@
-@php
-    $nasabah = $nasabah ?? (object)[
-        'id' => 1,
-        'nama_nasabah' => 'Ahmad Fauzi',
-        'nis_nip' => '10293847',
-        'jurusan' => (object)['nama_jurusan' => 'Pengembangan Perangkat Lunak dan Gim (PPLG)'],
-        'tempat_lahir' => 'Ciamis',
-        'tanggal_lahir' => '14 Mei 2006',
-        'jenis_kelamin' => 'Laki-Laki',
-        'jenis_identitas' => 'NIS',
-        'agama' => 'Islam',
-        'pendidikan' => 'SMK',
-        'jabatan' => 'Siswa',
-        'no_hp' => '081234567890',
-        'email' => 'ahmad.fauzi@example.com',
-        'alamat' => 'Jl. Merdeka No. 123, RT 02/04',
-        'desa' => (object)['name' => 'KAWALIMUKTI'],
-        'kecamatan' => (object)['name' => 'KAWALI'],
-        'kabupaten' => (object)['name' => 'KABUPATEN CIAMIS'],
-        'provinsi' => (object)['name' => 'JAWA BARAT'],
-        'kode_pos' => '46253',
-        'nama_kontak_darurat' => 'Bambang Sutrisno',
-        'no_hp_kontak_darurat' => '081298765432',
-        'hubungan_kontak_darurat' => 'Orang Tua / Ayah',
-        'alamat_kontak_darurat' => 'Jl. Merdeka No. 123, Ciamis',
-        'rekening' => (object)[
-            'id' => '1002938471',
-            'status_akun' => 'Aktif'
-        ]
-    ];
-@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Data Nasabah - Admin Bank Mini</title>
+    <title> </title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -46,18 +15,19 @@
             }
             @page {
                 size: A4;
-                margin: 0;
+                margin: 0; /* Hides default browser header (title, date) and footer (URL, page numbers) */
             }
             body .print-container {
                 width: 210mm !important;
                 height: auto !important;
-                padding: 1.2cm 1.6cm 1.2cm 1.6cm !important;
+                padding: 1.2cm 1.6cm 1.2cm 1.6cm !important; /* Top, Right, Bottom, Left */
                 box-sizing: border-box !important;
                 margin: 0 auto !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
                 background-color: white !important;
             }
+            /* Menghindari halaman terbelah */
             .page-break-avoid {
                 page-break-inside: avoid;
             }
@@ -205,8 +175,8 @@
         <div class="mt-12 print:mt-18 grid grid-cols-2 gap-6 text-center text-xs print:text-[12.5px] text-slate-800 page-break-avoid">
             <div>
                 <p class="text-slate-500 font-normal mb-1">Ciamis, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }} {{ \Carbon\Carbon::now()->format('H.i') }}</p>
-                <p class="mb-12 print:mb-14">Administrator,</p>
-                <p class="font-bold underline text-slate-900">{{ auth()->user()->name ?? 'Administrator Bank Mini' }}</p>
+                <p class="mb-12 print:mb-14">Petugas Customer Service,</p>
+                <p class="font-bold underline text-slate-900">Admin</p>
                 <p class="text-[10px] print:text-[11px] text-slate-400 mt-1">Nama Lengkap & Paraf</p>
             </div>
             <div>
@@ -228,7 +198,7 @@
         }
 
         window.onafterprint = function() {
-            window.location.href = "{{ route('admin.costumerservice.keloladata') }}";
+            window.location.href = "{{ route('kelola.data.cs.admin') }}";
         }
     </script>
 </body>

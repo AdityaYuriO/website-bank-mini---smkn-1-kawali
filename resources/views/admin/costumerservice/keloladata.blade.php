@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Customer Service - Kelola Data')
+@section('title', 'Admin - Kelola Data')
 @section('header_title')
-selamat datang {{ $user->name ?? 'Administrator' }}!
+selamat datang Admin!
 @endsection
 @section('header_subtitle', 'Pusat kendali untuk menambah, mengubah, dan menghapus data seluruh nasabah terdaftar.')
 
@@ -34,102 +34,6 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
 @endsection
 
 @section('content')
-@php
-    $perPage = request('per_page', 10);
-    if (!isset($allNasabah)) {
-        $sampleNasabah = collect([
-            (object)[
-                'id' => 1,
-                'nama_nasabah' => 'Muhammad Rizky Pratama',
-                'nis_nip' => '212210045',
-                'tempat_lahir' => 'Ciamis',
-                'tanggal_lahir' => '2006-05-12',
-                'jenis_kelamin' => 'Laki-laki',
-                'jenis_identitas' => 'Kartu Pelajar',
-                'agama' => 'Islam',
-                'pendidikan' => 'SMK',
-                'jabatan' => 'Siswa',
-                'no_hp' => '081234567890',
-                'email' => 'rizky@student.smkn1kawali.sch.id',
-                'alamat' => 'Jl. Veteran No. 45, RT 01/02',
-                'kode_pos' => '46253',
-                'nama_kontak_darurat' => 'Bambang Pratama',
-                'no_hp_kontak_darurat' => '081987654321',
-                'hubungan_kontak_darurat' => 'Orang Tua',
-                'alamat_kontak_darurat' => 'Jl. Veteran No. 45, RT 01/02, Kawali, Ciamis',
-                'pesan' => '',
-                'nama_perevisi' => '',
-                'jurusan' => (object)['nama_jurusan' => 'PPLG'],
-                'desa' => (object)['name' => 'Kawali'],
-                'kecamatan' => (object)['name' => 'Kawali'],
-                'kabupaten' => (object)['name' => 'Ciamis'],
-                'provinsi' => (object)['name' => 'Jawa Barat'],
-                'rekening' => (object)['id' => '320701892001', 'no_rekening' => '320701892001', 'status_akun' => 'aktif']
-            ],
-            (object)[
-                'id' => 2,
-                'nama_nasabah' => 'Dewi Sartika, S.Pd.',
-                'nis_nip' => '198801122015022001',
-                'tempat_lahir' => 'Kawali',
-                'tanggal_lahir' => '1988-01-12',
-                'jenis_kelamin' => 'Perempuan',
-                'jenis_identitas' => 'KTP',
-                'agama' => 'Islam',
-                'pendidikan' => 'S1/D4',
-                'jabatan' => 'Guru',
-                'no_hp' => '085223344556',
-                'email' => 'dewi.sartika@smkn1kawali.sch.id',
-                'alamat' => 'Dusun Sindangjaya RT 03/01',
-                'kode_pos' => '46253',
-                'nama_kontak_darurat' => 'Drs. H. Maman',
-                'no_hp_kontak_darurat' => '081334455667',
-                'hubungan_kontak_darurat' => 'Suami',
-                'alamat_kontak_darurat' => 'Dusun Sindangjaya RT 03/01, Kawali',
-                'pesan' => '',
-                'nama_perevisi' => '',
-                'jurusan' => (object)['nama_jurusan' => 'PPLG'],
-                'desa' => (object)['name' => 'Kawali'],
-                'kecamatan' => (object)['name' => 'Kawali'],
-                'kabupaten' => (object)['name' => 'Ciamis'],
-                'provinsi' => (object)['name' => 'Jawa Barat'],
-                'rekening' => (object)['id' => '320701892002', 'no_rekening' => '320701892002', 'status_akun' => 'aktif']
-            ],
-            (object)[
-                'id' => 3,
-                'nama_nasabah' => 'Ahmad Fauzi',
-                'nis_nip' => '212210088',
-                'tempat_lahir' => 'Ciamis',
-                'tanggal_lahir' => '2006-08-15',
-                'jenis_kelamin' => 'Laki-laki',
-                'jenis_identitas' => 'Kartu Pelajar',
-                'agama' => 'Islam',
-                'pendidikan' => 'SMK',
-                'jabatan' => 'Siswa',
-                'no_hp' => '087812345678',
-                'email' => 'ahmad.fauzi@student.smkn1kawali.sch.id',
-                'alamat' => 'Jl. Siliwangi No. 10',
-                'kode_pos' => '46253',
-                'nama_kontak_darurat' => 'Asep Hidayat',
-                'no_hp_kontak_darurat' => '087788990011',
-                'hubungan_kontak_darurat' => 'Orang Tua',
-                'alamat_kontak_darurat' => 'Jl. Siliwangi No. 10, Kawali',
-                'pesan' => 'Mohon lampirkan ulang scan kartu pelajar yang jelas',
-                'nama_perevisi' => 'Supervisor Bank Mini',
-                'jurusan' => (object)['nama_jurusan' => 'TJKT'],
-                'desa' => (object)['name' => 'Kawali'],
-                'kecamatan' => (object)['name' => 'Kawali'],
-                'kabupaten' => (object)['name' => 'Ciamis'],
-                'provinsi' => (object)['name' => 'Jawa Barat'],
-                'rekening' => (object)['id' => '320701892003', 'no_rekening' => '320701892003', 'status_akun' => 'revisi']
-            ],
-        ]);
-        $page = request('page', 1);
-        $allNasabah = new \Illuminate\Pagination\LengthAwarePaginator($sampleNasabah, $sampleNasabah->count(), $perPage, $page, [
-            'path' => url('/admin/costumerservice/keloladata')
-        ]);
-    }
-@endphp
-
 <!-- VIEW 1: TABEL DATA NASABAH -->
 <div id="viewTabelData" class="fade-in block flex-1 flex flex-col justify-start">
     <!-- Search Bar Mobile -->
@@ -141,10 +45,12 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 px-1">
         <h3 class="text-[22px] font-bold text-gray-800">Data Nasabah</h3>
         <div class="flex flex-col sm:flex-row gap-2.5 w-full sm:w-auto">
-            <button type="button" onclick="showToast('Template Excel berhasil diunduh (Mode Preview)', 'success')" class="w-full sm:w-auto bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-[10px] text-[13px] font-bold flex items-center gap-2 hover:bg-gray-50 active:scale-95 transition-all shadow-sm justify-center">
-                <i class="ph ph-file-xls text-base text-green-600"></i> Download Template
-            </button>
-            <a href="{{ url('/admin/costumerservice/import') }}" class="w-full sm:w-auto">
+            <a href="{{ route('template.nasabah.admin') }}" class="w-full sm:w-auto">
+                <button type="button" class="w-full bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-[10px] text-[13px] font-bold flex items-center gap-2 hover:bg-gray-50 active:scale-95 transition-all shadow-sm justify-center">
+                    <i class="ph ph-file-xls text-base text-green-600"></i> Download Template
+                </button>
+            </a>
+            <a href="{{ route('halaman.import.nasabah.admin') }}" class="w-full sm:w-auto">
                 <button type="button" class="w-full bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-[10px] text-[13px] font-bold flex items-center gap-2 hover:bg-gray-50 active:scale-95 transition-all shadow-sm justify-center">
                     <i class="ph ph-file-arrow-up text-base text-brand-blue"></i> Import Data
                 </button>
@@ -210,7 +116,7 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
                                     onclick="showDetail(
                                     '{{ $nasabah->nama_nasabah }}',
                                     '{{ $nasabah->nis_nip }}',
-                                    '{{ $nasabah->jurusan->nama_jurusan ?? '-' }}',
+                                    '{{ $nasabah->jurusan->nama_jurusan }}',
                                     '{{ $nasabah->tempat_lahir }}',
                                     '{{ $nasabah->tanggal_lahir }}',
                                     '{{ $nasabah->jenis_kelamin }}',
@@ -221,10 +127,10 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
                                     '{{ $nasabah->no_hp }}',
                                     '{{ $nasabah->email }}',
                                     '{{ $nasabah->alamat }}',
-                                    '{{ $nasabah->desa->name ?? '-' }}',
-                                    '{{ $nasabah->kecamatan->name ?? '-' }}',
-                                    '{{ $nasabah->kabupaten->name ?? '-' }}',
-                                    '{{ $nasabah->provinsi->name ?? '-' }}',
+                                    '{{ $nasabah->desa->name }}',
+                                    '{{ $nasabah->kecamatan->name }}',
+                                    '{{ $nasabah->kabupaten->name }}',
+                                    '{{ $nasabah->provinsi->name }}',
                                     '{{ $nasabah->kode_pos }}',
                                     '{{ $nasabah->nama_kontak_darurat }}',
                                     '{{ $nasabah->no_hp_kontak_darurat }}',
@@ -233,31 +139,33 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
                                     '{{ $nasabah->rekening->id ?? 'rekening belum dibuat' }}',
                                     '{{ $nasabah->rekening->status_akun ?? 'status belum ada'}}',
                                     '{{ $nasabah->pesan }}',
-                                    '{{ $nasabah->nama_perevisi ?? '-' }}' 
+                                    '{{ $nasabah->nama_perevisi ?? '-' }}'
                                     )"
                                     class="w-[28px] h-[28px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors"
                                     title="Lihat Detail">
+
                                     <i class="ph-fill ph-eye text-[15px]"></i>
                                 </button>
-                                <a href="{{ url('/admin/costumerservice/edit/' . $nasabah->id) }}">
+                                <a href="{{ route('halaman.edit.nasabah.admin', $nasabah->id) }}">
                                     <button class="w-[28px] h-[28px] rounded-full bg-[#d1fae5] text-[#10a163] flex items-center justify-center hover:bg-green-200 transition-colors"
                                         title="Edit">
                                         <i class="ph-fill ph-pencil-simple text-[15px]"></i>
                                     </button>
                                 </a>
-                                <button type="button" onclick="openConfirmModal({
-                                            title: 'Hapus Data Nasabah?',
-                                            message: 'Apakah Anda yakin ingin menghapus data nasabah <strong>{{ $nasabah->nama_nasabah }}</strong>? Tindakan ini tidak dapat dibatalkan.',
-                                            type: 'danger',
-                                            confirmText: 'Ya, Hapus Data',
-                                            onConfirm: () => {
-                                                this.closest('tr').remove();
-                                                showToast('Data nasabah {{ $nasabah->nama_nasabah }} berhasil dihapus (Mode Preview)', 'success');
-                                            }
-                                        })" class="w-[28px] h-[28px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Hapus">
-                                    <i class="ph-fill ph-trash text-[15px]"></i>
-                                </button>
-                                <a href="{{ url('/admin/costumerservice/print') }}">
+                                <form id="form-delete-nasabah-{{ $nasabah->id }}" action="{{ route('hapus.nasabah.cs.admin', $nasabah->id) }}" method="post" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" onclick="openConfirmModal({
+                                                title: 'Hapus Data Nasabah?',
+                                                message: 'Apakah Anda yakin ingin menghapus data nasabah <strong>{{ $nasabah->nama_nasabah }}</strong>? Tindakan ini tidak dapat dibatalkan.',
+                                                type: 'danger',
+                                                confirmText: 'Ya, Hapus Data',
+                                                onConfirm: () => document.getElementById('form-delete-nasabah-{{ $nasabah->id }}').submit()
+                                            })" class="w-[28px] h-[28px] rounded-full bg-[#fee2e2] text-red-500 flex items-center justify-center hover:bg-red-200 transition-colors" title="Hapus">
+                                        <i class="ph-fill ph-trash text-[15px]"></i>
+                                    </button>
+                                </form>
+                                <a href="{{ route('print.nasabah.admin.cs', $nasabah->id) }}">
                                     <button type="button"
                                         class="download-struk w-[28px] h-[28px] rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors focus:outline-none"
                                         title="Cetak Struk">
@@ -280,12 +188,13 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
 
 <!-- ================= CRUD VIEWS (Separated Files) ================= -->
 @include('admin.costumerservice.crudnasabah.tambah')
+@if(isset($nasabah))
 @include('admin.costumerservice.crudnasabah.detail')
-
+@endif
 <!-- ================= MODAL KONFIRMASI (GLOBAL) ================= -->
 <div id="confirmModal" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity opacity-0">
     <div class="bg-white rounded-[24px] shadow-xl w-full max-w-sm p-6 transform scale-95 transition-all transition-transform duration-300">
-        
+
         <!-- Icon & Title -->
         <div class="flex flex-col items-center text-center mb-6">
             <div id="confirmIconContainer" class="w-16 h-16 rounded-full flex items-center justify-center mb-4">
@@ -314,6 +223,7 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
         const views = {
             'tabel': document.getElementById('viewTabelData'),
             'tambah': document.getElementById('viewTambahData'),
+            'edit': document.getElementById('viewEditData'),
             'detail': document.getElementById('viewDetailData')
         };
 
@@ -344,20 +254,16 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
                 activeView.classList.add('block');
             }
         }
-        
-        const mainElem = document.querySelector('main');
-        if (mainElem) {
-            mainElem.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
+        document.querySelector('main').scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
 
     function changePerPage(value) {
         const url = new URL(window.location.href);
         url.searchParams.set('per_page', value);
-        url.searchParams.set('page', 1);
+        url.searchParams.set('page', 1); // Reset kembali ke halaman 1 setiap kali jumlah data diubah
         window.location.href = url.toString();
     }
 
@@ -447,17 +353,117 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
         const searchMobile = document.getElementById('searchMobile');
         const tableBody = document.querySelector('table tbody');
         const rows = Array.from(tableBody.querySelectorAll('.nasabah-row'));
+        const paginationContainer = document.getElementById('paginationContainer');
+
+        let currentPage = 1;
+        const itemsPerPage = 5;
+        let filteredRows = [...rows];
+
+        function updateTable() {
+            const totalItems = filteredRows.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+            if (currentPage > totalPages) {
+                currentPage = totalPages;
+            }
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+
+            // Hide all rows first
+            rows.forEach(row => row.style.display = 'none');
+
+            // Show only rows for current page and update numbers
+            filteredRows.slice(startIndex, endIndex).forEach((row, index) => {
+                row.style.display = '';
+                const numCell = row.querySelector('.row-number');
+                if (numCell) {
+                    numCell.textContent = (startIndex + index + 1) + '.';
+                }
+            });
+
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            if (!paginationContainer) return;
+
+            let html = `<div class="flex items-center justify-end gap-1.5 mt-5 pt-2">`;
+
+            // Prev Button
+            html += `
+                <button type="button" id="prevPageBtn" class="w-[28px] h-[28px] rounded-[8px] bg-brand-blue text-white flex items-center justify-center text-[12px] hover:bg-[#152a42] transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="ph-bold ph-caret-left"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `
+                        <span class="w-[28px] h-[28px] flex items-center justify-center text-[14px] font-extrabold text-brand-blue">${i}</span>
+                    `;
+                } else {
+                    html += `
+                        <button type="button" class="page-num-btn w-[28px] h-[28px] rounded-[8px] bg-brand-blue text-white flex items-center justify-center text-[13px] font-bold hover:bg-[#152a42] transition-all duration-200 shadow-sm hover:shadow-md" data-page="${i}">
+                            ${i}
+                        </button>
+                    `;
+                }
+
+                if (totalPages > 5 && i === 3 && totalPages > i + 1) {
+                    html += `<span class="w-[20px] flex items-center justify-center text-[13px] font-bold text-gray-400 tracking-widest">...</span>`;
+                    i = totalPages - 1;
+                }
+            }
+
+            // Next Button
+            html += `
+                <button type="button" id="nextPageBtn" class="w-[28px] h-[28px] rounded-[8px] bg-brand-blue text-white flex items-center justify-center text-[12px] hover:bg-[#152a42] transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="ph-bold ph-caret-right"></i>
+                </button>
+            `;
+
+            html += `</div>`;
+            paginationContainer.innerHTML = html;
+
+            // Page navigation event handlers
+            const prevBtn = document.getElementById('prevPageBtn');
+            if (prevBtn && currentPage > 1) {
+                prevBtn.onclick = () => {
+                    currentPage--;
+                    updateTable();
+                };
+            }
+
+            const nextBtn = document.getElementById('nextPageBtn');
+            if (nextBtn && currentPage < totalPages) {
+                nextBtn.onclick = () => {
+                    currentPage++;
+                    updateTable();
+                };
+            }
+
+            const numBtns = paginationContainer.getElementsByClassName('page-num-btn');
+            Array.from(numBtns).forEach(btn => {
+                btn.onclick = function() {
+                    currentPage = parseInt(this.getAttribute('data-page'));
+                    updateTable();
+                };
+            });
+        }
 
         function handleSearch(keyword) {
             keyword = keyword.toLowerCase().trim();
 
-            rows.forEach(row => {
+            filteredRows = rows.filter(row => {
                 const nama = row.cells[1]?.textContent.toLowerCase() || '';
                 const jabatan = row.cells[2]?.textContent.toLowerCase() || '';
                 const rekening = row.cells[3]?.textContent.toLowerCase() || '';
-                const match = nama.includes(keyword) || jabatan.includes(keyword) || rekening.includes(keyword);
-                row.style.display = match ? '' : 'none';
+                return nama.includes(keyword) || jabatan.includes(keyword) || rekening.includes(keyword);
             });
+
+            currentPage = 1;
+            updateTable();
         }
 
         if (searchInput) {
@@ -473,8 +479,8 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
                 handleSearch(this.value);
             });
         }
-    });
 
+    });
     // Fungsi untuk memunculkan Modal
     function openConfirmModal({ title, message, type = 'danger', confirmText = 'Ya', onConfirm }) {
         const modal = document.getElementById('confirmModal');
@@ -496,6 +502,7 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
             icon.className = 'ph-fill ph-check-circle text-[32px] text-green-500';
             btnConfirm.classList.add('bg-green-500', 'hover:bg-green-600');
         } else {
+            // Default (biru)
             iconContainer.classList.add('bg-blue-100', 'text-blue-500');
             icon.className = 'ph-fill ph-info text-[32px] text-blue-500';
             btnConfirm.classList.add('bg-brand-blue', 'hover:bg-blue-800');
@@ -509,11 +516,12 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
         // Set Fungsi saat tombol "Ya" ditekan
         btnConfirm.onclick = function() {
             onConfirm();
-            closeConfirmModal();
+            closeConfirmModal(); // Tutup modal sambil memproses
         };
 
         // Tampilkan Modal dengan animasi
         modal.classList.remove('hidden');
+        // Sedikit delay agar transisi CSS berjalan
         setTimeout(() => {
             modal.classList.remove('opacity-0');
             modal.firstElementChild.classList.remove('scale-95');
@@ -524,13 +532,15 @@ selamat datang {{ $user->name ?? 'Administrator' }}!
     // Fungsi untuk menutup Modal
     function closeConfirmModal() {
         const modal = document.getElementById('confirmModal');
+
+        // Animasi keluar
         modal.classList.add('opacity-0');
         modal.firstElementChild.classList.remove('scale-100');
         modal.firstElementChild.classList.add('scale-95');
 
         setTimeout(() => {
             modal.classList.add('hidden');
-        }, 300);
+        }, 300); // Sesuaikan dengan durasi transisi CSS (duration-300)
     }
 </script>
 @endsection

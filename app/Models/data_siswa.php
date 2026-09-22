@@ -16,6 +16,7 @@ class data_siswa extends Model
     public $fillable = ([
         'nama_lengkap',
         'nis',
+        'jabatan',
         'nisn',
         'jurusan_id',
         'jenis_kelamin',

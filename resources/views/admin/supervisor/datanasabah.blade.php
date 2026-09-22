@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Supervisor - Data Nasabah')
-@section('header_title', 'Selamat Datang, ' . ($user->name ?? 'Supervisor') . '!')
+@section('title', 'Admin - Data Nasabah')
+@section('header_title', 'Selamat Datang, ' . ($user->name ?? 'Admin') . '!')
 @section('header_subtitle', 'Lorem Ipsum is simply dummy text of the printing.')
 
 @section('styles')
@@ -26,38 +26,6 @@
 @endsection
 
 @section('content')
-@php
-    $perPage = $perPage ?? 10;
-    $userNasabah = $userNasabah ?? collect([
-        (object)[
-            'id' => 1,
-            'nama_nasabah' => 'Muhammad Rizky Pratama',
-            'jabatan' => 'Siswa (RPL)',
-            'rekening' => (object)[
-                'id' => '320701892001',
-                'status_akun' => 'aktif'
-            ]
-        ],
-        (object)[
-            'id' => 2,
-            'nama_nasabah' => 'Dewi Sartika, S.Pd.',
-            'jabatan' => 'Guru / GTK',
-            'rekening' => (object)[
-                'id' => '320701892002',
-                'status_akun' => 'aktif'
-            ]
-        ],
-        (object)[
-            'id' => 3,
-            'nama_nasabah' => 'Anisa Rahmawati',
-            'jabatan' => 'Siswa (AKL)',
-            'rekening' => (object)[
-                'id' => '320701892003',
-                'status_akun' => 'revisi'
-            ]
-        ]
-    ]);
-@endphp
 
 <!-- ================= VIEW 1: TABEL DATA NASABAH ================= -->
 <div id="viewTabelData" class="fade-in flex flex-1 flex-col justify-start">
@@ -142,18 +110,18 @@
                         </td>
 
                         <td class="py-4 px-2 border-b border-gray-50 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <a href="{{ url('/admin/supervisor/detail/nasabah') }}">
-                                    <button class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" title="Lihat Detail"><i class="ph-fill ph-eye text-[16px]"></i></button>
-                                </a>
-                                <a href="{{ url('/admin/supervisor/print/nasabah') }}">
-                                    <button type="button"
-                                            class="download-struk w-[28px] h-[28px] rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors focus:outline-none"
-                                            title="Cetak Struk">
-                                        <i class="ph-fill ph-printer text-[15px]"></i>
-                                    </button>
-                                </a>
-                            </div>
+                        <div class="flex items-center justify-center gap-2">
+                            <a href="{{ route('detail.nasabah.admin', $nasabah->id) }}">
+                                <button class="w-[30px] h-[30px] rounded-full bg-[#e2e8f0] text-brand-blue flex items-center justify-center hover:bg-gray-300 transition-colors" title="Lihat Detail"><i class="ph-fill ph-eye text-[16px]"></i></button>
+                            </a>
+                        <a href="{{ route('print.nasabah.admin', $nasabah->id) }}">
+                            <button type="button"
+                                    class="download-struk w-[28px] h-[28px] rounded-full bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors focus:outline-none"
+                                    title="Cetak Struk">
+                                <i class="ph-fill ph-printer text-[15px]"></i>
+                            </button>
+                        </a>
+                        </div>
                         </td>
                     </tr>
                     @endforeach

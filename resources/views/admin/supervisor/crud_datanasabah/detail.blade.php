@@ -1,213 +1,205 @@
-@extends('layouts.admin')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 12px !important;
+            }
+            @page {
+                size: A4;
+                margin: 0; /* Hides default browser header (title, date) and footer (URL, page numbers) */
+            }
+            body .print-container {
+                width: 210mm !important;
+                height: auto !important;
+                padding: 1.2cm 1.6cm 1.2cm 1.6cm !important; /* Top, Right, Bottom, Left */
+                box-sizing: border-box !important;
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                background-color: white !important;
+            }
+            /* Menghindari halaman terbelah */
+            .page-break-avoid {
+                page-break-inside: avoid;
+            }
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 py-4 print:py-0 print:bg-white text-slate-800">
 
-@section('title', 'Supervisor - Detail Nasabah')
+    <!-- Container Utama -->
+    <div class="print-container max-w-[800px] mx-auto bg-white p-6 print:p-0 shadow-md print:shadow-none rounded-xl print:rounded-none">
 
-@section('header_title')
-    Detail Data Nasabah
-@endsection
+        <!-- Kop Surat -->
+        <div class="flex items-center justify-between pb-3 border-b-4 border-slate-900 mb-5">
+            <div class="w-20 h-20 shrink-0 flex items-center justify-center">
+                <img src="{{ asset('img/logosmk.png') }}" alt="Logo SMK" class="w-full h-full object-contain">
+            </div>
+            <div class="text-center flex-1 px-6">
+                <h1 class="text-2xl print:text-[26px] font-extrabold tracking-wider text-slate-900 leading-tight">BANK MINI K-ONE</h1>
+                <h2 class="text-sm print:text-base font-bold text-slate-800 leading-normal mt-0.5">SMK NEGERI 1 KAWALI</h2>
+                <p class="text-[10px] print:text-xs text-slate-600 italic mt-1">Jalan Raya Kawali No. 65, Ciamis, Jawa Barat | Kode Pos: 46253</p>
+                <p class="text-[9px] print:text-[10px] text-slate-500 mt-0.5">Telp: (0265) 791707 | Email: bankmini.kone@smkn1kawali.sch.id</p>
+            </div>
+            <div class="w-20 h-20 shrink-0 flex items-center justify-center">
+                <img src="{{ asset('img/bankmini2.png') }}" alt="Logo Bank Mini" class="w-full h-full object-contain">
+            </div>
+        </div>
 
-@section('header_subtitle', 'Informasi detail mengenai nasabah terpilih.')
+        <!-- Judul Dokumen -->
+        <div class="text-center mb-5 print:mb-6">
+            <h3 class="text-base print:text-lg font-black uppercase tracking-widest text-slate-900 border-b-2 border-slate-300 inline-block pb-1">FORMULIR DATA PROFIL NASABAH</h3>
+            <p class="text-xs print:text-sm text-slate-500 mt-1.5">Nomor Rekening: <span class="font-bold text-slate-900 text-xs print:text-base tracking-wider">{{ $nasabah->rekening->id ?? '-' }}</span></p>
+        </div>
 
-@section('styles')
-<style>
-    .fade-in { animation: fadeIn 0.3s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
-@endsection
-
-@section('content')
-@php
-    $nasabah = $nasabah ?? (object)[
-        'id' => 1,
-        'nama_nasabah' => 'Muhammad Rizky Pratama',
-        'nis_nip' => '212210045',
-        'tempat_lahir' => 'Ciamis',
-        'tanggal_lahir' => '2006-05-12',
-        'jenis_kelamin' => 'Laki-Laki',
-        'jenis_identitas' => 'Kartu Pelajar',
-        'agama' => 'Islam',
-        'pendidikan' => 'SMK',
-        'jabatan' => 'Siswa',
-        'no_hp' => '081234567890',
-        'email' => 'rizky@student.smkn1kawali.sch.id',
-        'alamat' => 'Jl. Veteran No. 45, RT 01/02',
-        'kode_pos' => '46253',
-        'nama_kontak_darurat' => 'Bambang Pratama',
-        'no_hp_kontak_darurat' => '081987654321',
-        'hubungan_kontak_darurat' => 'Orang Tua',
-        'alamat_kontak_darurat' => 'Jl. Veteran No. 45, RT 01/02, Kawali, Ciamis',
-        'jurusan' => (object)['nama_jurusan' => 'Rekayasa Perangkat Lunak'],
-        'desa' => (object)['name' => 'Kawali'],
-        'kecamatan' => (object)['name' => 'Kawali'],
-        'kabupaten' => (object)['name' => 'Ciamis'],
-        'provinsi' => (object)['name' => 'Jawa Barat'],
-        'rekening' => (object)['id' => '320701892001', 'status_akun' => 'aktif'],
-    ];
-@endphp
-
-<div id="viewDetailData" class="fade-in flex-1 mt-4">
-    <div class="bg-white rounded-2xl sm:rounded-[24px] shadow-card p-4 sm:p-6 md:p-10 w-full border border-gray-50">
-
-        <!-- SECTION 1: DATA PRIBADI -->
-        <div class="mb-12">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-[5px] h-6 bg-[#c0860b] rounded-full"></div>
-                <h3 class="text-[20px] font-bold text-gray-800">Data Pribadi</h3>
+        <!-- Blok Data Nasabah -->
+        <div class="space-y-4 print:space-y-5 text-xs print:text-[12.5px] text-slate-800">
+            <!-- 1. Informasi Akun & Pekerjaan -->
+            <div class="page-break-avoid">
+                <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1 mb-2 uppercase tracking-wider text-[11px] print:text-xs flex items-center gap-2">
+                    <span class="w-1.5 h-3 bg-blue-600 rounded-sm"></span> Informasi Akun & Kepegawaian
+                </h4>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-2">
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">No. Rekening</span>
+                        <span class="font-bold text-slate-900">: {{ $nasabah->rekening->id ?? 'Belum dibuat' }}</span>
+                    </div>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Status Akun</span>
+                        <span class="font-bold uppercase text-slate-900 text-[11px] print:text-xs">: {{ $nasabah->rekening->status_akun ?? 'Menunggu Verifikasi' }}</span>
+                    </div>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">NIS / NIP</span>
+                        <span class="text-slate-900">: {{ $nasabah->nis_nip }}</span>
+                    </div>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Jabatan / Status</span>
+                        <span class="text-slate-900">: {{ $nasabah->jabatan }}</span>
+                    </div>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Pendidikan</span>
+                        <span class="text-slate-900">: {{ $nasabah->pendidikan }}</span>
+                    </div>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Jurusan</span>
+                        <span class="text-slate-900">: {{ $nasabah->jurusan->nama_jurusan ?? '-' }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="space-y-5">
-                <!-- Row 1 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Nama Lengkap</label>
-                        <input type="text" value="{{ $nasabah->nama_nasabah }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+            <!-- 2. Informasi Pribadi -->
+            <div class="page-break-avoid">
+                <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1 mb-2 uppercase tracking-wider text-[11px] print:text-xs flex items-center gap-2">
+                    <span class="w-1.5 h-3 bg-blue-600 rounded-sm"></span> Data Pribadi Nasabah
+                </h4>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-2">
+                    <div class="flex pb-1 col-span-2">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Nama Lengkap</span>
+                        <span class="font-bold text-slate-900">: {{ $nasabah->nama_nasabah }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">NIS/NIP</label>
-                        <input type="text" value="{{ $nasabah->nis_nip }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Tempat, Tgl Lahir</span>
+                        <span class="text-slate-900">: {{ $nasabah->tempat_lahir }}, {{ $nasabah->tanggal_lahir }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Jurusan</label>
-                        <input type="text" value="{{ $nasabah->jurusan->nama_jurusan ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Jenis Kelamin</span>
+                        <span class="text-slate-900">: {{ $nasabah->jenis_kelamin }}</span>
                     </div>
-                </div>
-
-                <!-- Row 2 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Tempat Lahir</label>
-                        <input type="text" value="{{ $nasabah->tempat_lahir }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Agama</span>
+                        <span class="text-slate-900">: {{ $nasabah->agama }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Tanggal Lahir</label>
-                        <input type="text" value="{{ $nasabah->tanggal_lahir }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Jenis Identitas</span>
+                        <span class="text-slate-900">: {{ $nasabah->jenis_identitas }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Jenis Kelamin</label>
-                        <input type="text" value="{{ $nasabah->jenis_kelamin }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">No. Telepon / HP</span>
+                        <span class="text-slate-900">: {{ $nasabah->no_hp }}</span>
                     </div>
-                </div>
-
-                <!-- Row 3 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Jenis Identitas Utama</label>
-                        <input type="text" value="{{ $nasabah->jenis_identitas }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Alamat Email</span>
+                        <span class="text-slate-900">: {{ $nasabah->email }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Agama</label>
-                        <input type="text" value="{{ $nasabah->agama }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1 col-span-2">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Alamat Lengkap</span>
+                        <span class="text-slate-900 leading-normal">: {{ $nasabah->alamat }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Pendidikan</label>
-                        <input type="text" value="{{ $nasabah->pendidikan }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1 col-span-2">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Wilayah</span>
+                        <span class="text-slate-900">: Kel. {{ $nasabah->desa->name ?? '-' }}, Kec. {{ $nasabah->kecamatan->name ?? '-' }}, {{ $nasabah->kabupaten->name ?? '-' }}, {{ $nasabah->provinsi->name ?? '-' }} ({{ $nasabah->kode_pos }})</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Row 4 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Jabatan</label>
-                        <input type="text" value="{{ $nasabah->jabatan }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+            <!-- 3. Informasi Kontak Darurat -->
+            <div class="page-break-avoid">
+                <h4 class="font-bold text-slate-900 border-b border-slate-200 pb-1 mb-2 uppercase tracking-wider text-[11px] print:text-xs flex items-center gap-2">
+                    <span class="w-1.5 h-3 bg-blue-600 rounded-sm"></span> Kontak Darurat
+                </h4>
+                <div class="grid grid-cols-2 gap-x-8 gap-y-1.5 print:gap-y-2">
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Nama Kontak</span>
+                        <span class="font-bold text-slate-900">: {{ $nasabah->nama_kontak_darurat }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Telepon Selular</label>
-                        <input type="text" value="{{ $nasabah->no_hp }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Hubungan</span>
+                        <span class="text-slate-900">: {{ $nasabah->hubungan_kontak_darurat }}</span>
                     </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Email</label>
-                        <input type="text" value="{{ $nasabah->email }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1 col-span-2">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">No. Telepon HP</span>
+                        <span class="text-slate-900">: {{ $nasabah->no_hp_kontak_darurat }}</span>
                     </div>
-                </div>
-
-                <!-- Row 5: Alamat Complex -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Alamat</label>
-                        <textarea class="w-full h-[155px] border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-700 bg-white cursor-default resize-none focus:outline-none" readonly>{{ $nasabah->alamat }}</textarea>
-                    </div>
-                    <div class="flex flex-col gap-5">
-                        <div>
-                            <label class="block text-[13px] font-semibold text-gray-500 mb-2">Kelurahan</label>
-                            <input type="text" value="{{ $nasabah->desa->name ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                        </div>
-                        <div>
-                            <label class="block text-[13px] font-semibold text-gray-500 mb-2">Kecamatan</label>
-                            <input type="text" value="{{ $nasabah->kecamatan->name ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 6 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Kab/Kota</label>
-                        <input type="text" value="{{ $nasabah->kabupaten->name ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                    </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Provinsi</label>
-                        <input type="text" value="{{ $nasabah->provinsi->name ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                    </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Kode Pos</label>
-                        <input type="text" value="{{ $nasabah->kode_pos }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
+                    <div class="flex pb-1 col-span-2">
+                        <span class="w-36 shrink-0 font-medium text-slate-500">Alamat Kontak</span>
+                        <span class="text-slate-900 leading-normal">: {{ $nasabah->alamat_kontak_darurat }}</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 2: DATA PIHAK YANG DAPAT DIHUBUNGI -->
-        <div class="mb-12">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-[5px] h-6 bg-[#c0860b] rounded-full"></div>
-                <h3 class="text-[20px] font-bold text-gray-800">Data Pihak yang Dapat Dihubungi</h3>
+        <!-- Tanda Tangan -->
+        <div class="mt-12 print:mt-18 grid grid-cols-2 gap-6 text-center text-xs print:text-[12.5px] text-slate-800 page-break-avoid">
+            <div>
+                <p class="text-slate-500 font-normal mb-1">Ciamis, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }} {{ \Carbon\Carbon::now()->format('H.i') }}</p>
+                <p class="mb-12 print:mb-14">Petugas Supervisor,</p>
+                <p class="font-bold underline text-slate-900">{{ auth()->user()->name }}</p>
+                <p class="text-[10px] print:text-[11px] text-slate-400 mt-1">Nama Lengkap & Paraf</p>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Nama Lengkap</label>
-                        <input type="text" value="{{ $nasabah->nama_kontak_darurat }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                    </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Telepon Selular</label>
-                        <input type="text" value="{{ $nasabah->no_hp_kontak_darurat }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                    </div>
-                    <div>
-                        <label class="block text-[13px] font-semibold text-gray-500 mb-2">Hubungan dengan Pemohon</label>
-                        <input type="text" value="{{ $nasabah->hubungan_kontak_darurat }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none" readonly>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[13px] font-semibold text-gray-500 mb-2">Alamat</label>
-                    <textarea class="w-full h-[220px] border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-700 bg-white cursor-default resize-none focus:outline-none" readonly>{{ $nasabah->alamat_kontak_darurat }}</textarea>
-                </div>
+            <div>
+                <p class="invisible mb-1 text-slate-500 font-normal">Placeholder</p>
+                <p class="mb-12 print:mb-14">Nasabah,</p>
+                <p class="font-bold underline text-slate-900">{{ $nasabah->nama_nasabah }}</p>
+                <p class="text-[10px] print:text-[11px] text-slate-400 mt-1">Tanda Tangan & Nama Terang</p>
             </div>
         </div>
 
-        <!-- SECTION 3: DATA REKENING -->
-        <div class="mb-12">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-[5px] h-6 bg-[#c0860b] rounded-full"></div>
-                <h3 class="text-[20px] font-bold text-gray-800">Data Rekening</h3>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label class="block text-[13px] font-semibold text-gray-500 mb-2">No. Rekening</label>
-                    <input type="text" value="{{ $nasabah->rekening->id ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none font-bold" readonly>
-                </div>
-                <div>
-                    <label class="block text-[13px] font-semibold text-gray-500 mb-2">Status Rekening</label>
-                    <input type="text" value="{{ $nasabah->rekening->status_akun ?? '-' }}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-[14px] text-gray-700 bg-white cursor-default focus:outline-none font-bold" readonly>
-                </div>
-            </div>
-        </div>
-
-        <!-- BUTTONS -->
-        <div class="flex justify-center mt-12">
-            <a href="{{ url('/admin/supervisor/datanasabah') }}" class="w-full md:w-[400px] bg-[#797979] hover:bg-gray-600 text-white font-bold py-4 rounded-xl transition-colors text-[15px] flex items-center justify-center">Kembali</a>
-        </div>
     </div>
-</div>
-@endsection
+
+    <!-- Pemicu Cetak Otomatis di Browser -->
+    <script>
+        window.onload = function() {
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        window.onafterprint = function() {
+            window.location.href = "{{ route('halaman.nasabah.admin') }}";
+        }
+    </script>
+</body>
+</html>

@@ -4,7 +4,9 @@
             <div class="w-[6px] h-7 bg-brand-green rounded-full"></div>
             Edit Data Petugas
         </h3>
-        <form id="formEditPetugas" onsubmit="event.preventDefault(); showToast('Perubahan data petugas berhasil disimpan (Mode Preview)', 'success'); switchView('tabel'); return false;">
+        <form id="formEditPetugas" action="" method="POST">
+            @csrf
+            @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 <!-- Nama Petugas -->
                 <div>
@@ -12,23 +14,27 @@
                     <input type="text"
                         id="edit_nama"
                         name="name"
-                        value="Budi Santoso, M.Kom"
-                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                        value="{{ old('name', $petugasEdit->user->name ?? '') }}"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all bg-white shadow-sm">
                 </div>
 
                 <!-- Kelas -->
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Kelas</label>
                     <select name="kelas" id="edit_kelas"
-                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] focus:outline-none focus:border-brand-blue shadow-sm">
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all bg-white shadow-sm">
                         <option value="">Pilih Kelas</option>
-                        <option value="X AK 1">X AK 1</option>
-                        <option value="X AK 2">X AK 2</option>
-                        <option value="XI AK 1">XI AK 1</option>
-                        <option value="XI AK 2">XI AK 2</option>
-                        <option value="XII AK 1" selected>XII AK 1</option>
-                        <option value="XII AK 2">XII AK 2</option>
+                        <option value="X AK 1" {{ old('kelas', $petugasEdit->kelas ?? '') == 'X AK 1' ? 'selected' : '' }}>X AK 1</option>
+                        <option value="X AK 2" {{ old('kelas', $petugasEdit->kelas ?? '') == 'X AK 2' ? 'selected' : '' }}>X AK 2</option>
+                        <option value="XI AK 1" {{ old('kelas', $petugasEdit->kelas ?? '') == 'XI AK 1' ? 'selected' : '' }}>XI AK 1</option>
+                        <option value="XI AK 2" {{ old('kelas', $petugasEdit->kelas ?? '') == 'XI AK 2' ? 'selected' : '' }}>XI AK 2</option>
+                        <option value="XII AK 1" {{ old('kelas', $petugasEdit->kelas ?? '') == 'XII AK 1' ? 'selected' : '' }}>XII AK 1</option>
+                        <option value="XII AK 2" {{ old('kelas', $petugasEdit->kelas ?? '') == 'XII AK 2' ? 'selected' : '' }}>XII AK 2</option>
                     </select>
+
+                    @error('kelas')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Password -->
@@ -37,7 +43,10 @@
                     <div class="relative">
                         <input type="password"
                             id="edit_password"
-                            name="password" placeholder="Kosongkan jika tidak ingin mengubah" class="w-full border border-gray-200 rounded-lg pl-4 pr-11 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                            name="password" placeholder="Kosongkan jika tidak ingin mengubah" class="w-full border border-gray-200 rounded-lg pl-4 pr-11 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all bg-white shadow-sm">
+                        <button type="button" onclick="togglePasswordVisibility('edit_password', 'icon_edit_password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none p-1">
+                            <i id="icon_edit_password" class="ph ph-eye text-[20px]"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -47,18 +56,17 @@
                     <input type="email"
                         id="edit_email"
                         name="email"
-                        value="budi.supervisor@bankmini.test"
-                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                        value="{{ old('email', $petugasEdit->user->email ?? '') }}"
+                        class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-all bg-white shadow-sm">
                 </div>
 
                 <!-- Role Utama -->
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Role Utama</label>
                     <select name="role_id" id="edit_role" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none shadow-sm">
-                        <option value="1">Supervisor</option>
-                        <option value="2">Customer Service</option>
-                        <option value="3">Teller</option>
-                        <option value="4">Admin</option>
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -67,10 +75,9 @@
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Role Kedua (Opsional)</label>
                     <select name="role_id_2" id="edit_role_2" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none shadow-sm">
                         <option value="">-- Tidak Ada / Kosongkan --</option>
-                        <option value="1">Supervisor</option>
-                        <option value="2">Customer Service</option>
-                        <option value="3">Teller</option>
-                        <option value="4">Admin</option>
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

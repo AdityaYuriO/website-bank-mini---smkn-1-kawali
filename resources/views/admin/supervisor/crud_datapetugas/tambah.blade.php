@@ -4,11 +4,13 @@
             <div class="w-[6px] h-7 bg-brand-green rounded-full"></div>
             Tambah Data Petugas
         </h3>
-        <form onsubmit="event.preventDefault(); showToast('Data petugas berhasil ditambahkan (Mode Preview)', 'success'); switchView('tabel'); return false;">
+        <form action="{{ route('tambah.petugas.admin') }}" method="POST">
+            @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <!-- Input Nama, Kelas, Password, Email tetap seperti biasa -->
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Nama Petugas</label>
-                    <input type="text" name="name" required placeholder="Masukkan nama petugas" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                    <input type="text" name="name" placeholder="Masukkan nama petugas" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
                 </div>
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Kelas</label>
@@ -24,33 +26,31 @@
                 </div>
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Password</label>
-                    <input type="password" name="password" required placeholder="********" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                    <input type="password" name="password" placeholder="********" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
                 </div>
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Email</label>
-                    <input type="email" name="email" required placeholder="contoh@gmail.com" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                    <input type="email" name="email" placeholder="contoh@gmail.com" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
                 </div>
 
                 <!-- Role Utama -->
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Role Utama</label>
-                    <select name="role_id" required class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
-                        <option value="1">Supervisor</option>
-                        <option value="2">Customer Service</option>
-                        <option value="3">Teller</option>
-                        <option value="4">Admin</option>
+                    <select name="role_id" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                        @endforeach
                     </select>
                 </div>
 
-                <!-- Role Kedua -->
+                <!-- Role Kedua (Opsional untuk Multi-Role) -->
                 <div>
                     <label class="block text-[13.5px] font-bold text-gray-500 mb-2">Role Kedua (Opsional)</label>
                     <select name="role_id_2" class="w-full border border-gray-200 rounded-lg px-4 py-3 text-[14px] text-gray-800 focus:outline-none focus:border-brand-blue shadow-sm">
                         <option value="">-- Tidak Ada / Kosongkan --</option>
-                        <option value="1">Supervisor</option>
-                        <option value="2">Customer Service</option>
-                        <option value="3">Teller</option>
-                        <option value="4">Admin</option>
+                        @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>

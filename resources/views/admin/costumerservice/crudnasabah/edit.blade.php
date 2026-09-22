@@ -1,55 +1,6 @@
-@php
-    $nasabah = $nasabah ?? (object)[
-        'id' => 1,
-        'nama_nasabah' => 'Ahmad Fauzi',
-        'nis_nip' => '10293847',
-        'jurusan_id' => 3,
-        'tempat_lahir' => 'Ciamis',
-        'tanggal_lahir' => '2006-05-14',
-        'jenis_kelamin' => 'Laki-Laki',
-        'jenis_identitas' => 'NIS',
-        'agama' => 'Islam',
-        'pendidikan' => 'SMK',
-        'jabatan' => 'Siswa',
-        'no_hp' => '081234567890',
-        'email' => 'ahmad.fauzi@example.com',
-        'alamat' => 'Jl. Merdeka No. 123, RT 02/04',
-        'provinsi_id' => 32,
-        'kab_kota_id' => 3207,
-        'kecamatan_id' => 320701,
-        'kelurahan_id' => 32070101,
-        'kode_pos' => '46253',
-        'nama_kontak_darurat' => 'Bambang Sutrisno',
-        'no_hp_kontak_darurat' => '081298765432',
-        'hubungan_kontak_darurat' => 'Orang Tua / Ayah',
-        'alamat_kontak_darurat' => 'Jl. Merdeka No. 123, Ciamis',
-        'rekening' => (object)[
-            'id' => '1002938471',
-            'status_akun' => 'Aktif'
-        ]
-    ];
-    $provinsi = $provinsi ?? collect([
-        (object)['id' => 32, 'name' => 'JAWA BARAT'],
-        (object)['id' => 31, 'name' => 'DKI JAKARTA'],
-        (object)['id' => 33, 'name' => 'JAWA TENGAH']
-    ]);
-    $kabupaten = $kabupaten ?? collect([
-        (object)['id' => 3207, 'name' => 'KABUPATEN CIAMIS'],
-        (object)['id' => 3206, 'name' => 'KABUPATEN TASIKMALAYA']
-    ]);
-    $kecamatan = $kecamatan ?? collect([
-        (object)['id' => 320701, 'name' => 'KAWALI'],
-        (object)['id' => 320702, 'name' => 'LUMBUNG']
-    ]);
-    $desa = $desa ?? collect([
-        (object)['id' => 32070101, 'name' => 'KAWALIMUKTI'],
-        (object)['id' => 32070102, 'name' => 'CITEGEM']
-    ]);
-@endphp
-
 @extends('layouts.admin')
 
-@section('title', 'Admin - Edit Data Nasabah')
+@section('title', 'Admin - Edit Nasabah')
 
 @section('header_title')
 Edit Data Nasabah
@@ -80,8 +31,9 @@ Edit Data Nasabah
 @section('content')
 <div id="viewEditData" class="fade-in flex-1 mt-4">
     <div class="bg-white rounded-[24px] shadow-card p-6 md:p-10 w-full border border-gray-50">
-        <form onsubmit="event.preventDefault(); showAdminNotification('Perubahan data nasabah berhasil disimpan!'); setTimeout(() => { window.location.href = '{{ route('admin.costumerservice.keloladata') }}'; }, 1200);" id="nasabahFormEdit">
+        <form action="{{ route('update.data.nasabah.admin', $nasabah->id) }}" method="POST" id="nasabahFormEdit">
             @csrf
+            @method('PUT')
 
             <input type="hidden" value="non-aktif" name="status_akun">
             <!-- SECTION 1: DATA PRIBADI -->
@@ -110,6 +62,7 @@ Edit Data Nasabah
                             <option value="5" {{ old('jurusan', $nasabah->jurusan_id) == 5 ? 'selected' : '' }}>MPLB</option>
                             <option value="6" {{ old('jurusan', $nasabah->jurusan_id) == 6 ? 'selected' : '' }}>AKL</option>
                             <option value="7" {{ old('jurusan', $nasabah->jurusan_id) == 7 ? 'selected' : '' }}>SK</option>
+                            <option value="8" {{ old('jurusan', $nasabah->jurusan_id) == 8 ? 'selected' : '' }}>TU</option>
                         </select>
                     </div>
                     <div>
@@ -267,10 +220,71 @@ Edit Data Nasabah
 
             <!-- BUTTONS -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-12">
-                <a href="{{ route('admin.costumerservice.keloladata') }}" class="w-full bg-[#797979] hover:bg-gray-600 text-white font-bold py-3.5 rounded-xl transition-colors text-[15px] flex items-center justify-center">Kembali</a>
+                <a href="{{ route('kelola.data.cs.admin') }}" class="w-full bg-[#797979] hover:bg-gray-600 text-white font-bold py-3.5 rounded-xl transition-colors text-[15px] flex items-center justify-center">Kembali</a>
                 <button type="submit" class="w-full bg-button-gradient hover:bg-[#0e8f56] text-white font-bold py-3.5 rounded-xl transition-colors text-[15px]">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#provinsi').change(function() {
+            let id_provinsi = $(this).val();
+            if (!id_provinsi) return;
+
+            $.ajax({
+                url: '/get-kabupaten/' + id_provinsi,
+                type: 'GET',
+                success: function(data) {
+                    $('#kabupaten').empty();
+                    $('#kabupaten').append(`<option value="">Pilih Kabupaten</option>`);
+                    $('#kecamatan').empty().append(`<option value="">Pilih Kecamatan</option>`);
+                    $('#desa').empty().append(`<option value="">Pilih Desa</option>`);
+                    data.forEach(function(item) {
+                        $('#kabupaten').append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+            });
+        });
+
+        $('#kabupaten').change(function() {
+            let id_kabupaten = $(this).val();
+            if (!id_kabupaten) return;
+
+            $.ajax({
+                url: '/get-kecamatan/' + id_kabupaten,
+                type: 'GET',
+                success: function(data) {
+                    $('#kecamatan').empty();
+                    $('#kecamatan').append(`<option value="">Pilih Kecamatan</option>`);
+                    $('#desa').empty().append(`<option value="">Pilih Desa</option>`);
+                    data.forEach(function(item) {
+                        $('#kecamatan').append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+            });
+        });
+
+        $('#kecamatan').change(function() {
+            let id_kecamatan = $(this).val();
+            if (!id_kecamatan) return;
+
+            $.ajax({
+                url: '/get-desa/' + id_kecamatan,
+                type: 'GET',
+                success: function(data) {
+                    $('#desa').empty();
+                    $('#desa').append(`<option value="">Pilih Desa</option>`);
+                    data.forEach(function(item) {
+                        $('#desa').append(`<option value="${item.id}">${item.name}</option>`);
+                    });
+                }
+            });
+        });
+    });
+</script>
 @endsection

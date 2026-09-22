@@ -131,7 +131,7 @@
                     <div id="spvSubmenu" class="grid transition-all duration-300 {{ $isSupervisor ? 'submenu-open' : 'submenu-closed' }}">
                         <div class="overflow-hidden flex flex-col">
                             <!-- Dashboard -->
-                            <a href="{{ url('/admin/supervisor/dashboard') }}" class="pl-[48px] pr-6 py-2 {{ str_contains($currentUrl, '/admin/supervisor/dashboard') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
+                            <a href="{{ route('halaman.utama.admin') }}" class="pl-[48px] pr-6 py-2 {{ str_contains($currentUrl, '/admin/supervisor/dashboard') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
                                 Dashboard
                             </a>
 
@@ -143,12 +143,12 @@
                                 </button>
                                 <div id="kelolaDataSubmenu" class="grid transition-all duration-300 {{ $isKelolaDataSpv ? 'submenu-open' : 'submenu-closed' }}">
                                     <div class="overflow-hidden flex flex-col">
-                                        <a href="{{ url('/admin/supervisor/datapetugas') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datapetugas') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Petugas</a>
-                                        <a href="{{ url('/admin/supervisor/datanasabah') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datanasabah') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Nasabah</a>
+                                        <a href="{{ route('halaman.petugas.admin') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datapetugas') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Petugas</a>
+                                        <a href="{{ route('halaman.nasabah.admin') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datanasabah') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Nasabah</a>
                                         <a href="{{ url('/admin/supervisor/biayatransaksi') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'biayatransaksi') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Biaya Transaksi</a>
                                         <a href="{{ url('/admin/supervisor/saldominimum') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'saldominimum') || str_contains($currentUrl, 'saldoMinimum') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Saldo Minimum</a>
-                                        <a href="{{ url('/admin/supervisor/datamaster/siswa') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datamaster/siswa') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Siswa</a>
-                                        <a href="{{ url('/admin/supervisor/datamaster/gtk') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datamaster/gtk') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data GTK</a>
+                                        <a href="{{ route('master.siswa.admin') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datamaster/siswa') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data Siswa</a>
+                                        <a href="{{ route('master.gtk.admin') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'datamaster/gtk') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Data GTK</a>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@
                                 <div id="verifikasiSubmenu" class="grid transition-all duration-300 {{ $isVerifikasiSpv ? 'submenu-open' : 'submenu-closed' }}">
                                     <div class="overflow-hidden flex flex-col">
                                         <a href="{{ url('/admin/supervisor/verifikasi/login') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'verifikasi/login') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Verifikasi Login</a>
-                                        <a href="{{ url('/admin/supervisor/verifikasi/registrasirekening') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'registrasi') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Verifikasi Registrasi</a>
+                                        <a href="{{ route('verifikasi.nasabah.admin') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'registrasi') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Verifikasi Registrasi</a>
                                         <a href="{{ url('/admin/supervisor/verifikasi/transfer') }}" class="pl-[62px] pr-6 py-1.5 {{ str_contains($currentUrl, 'verifikasi/transfer') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13px] hover:text-gray-800 hover:bg-gray-50 transition-colors">Verifikasi Transfer</a>
                                     </div>
                                 </div>
@@ -182,10 +182,10 @@
                     </button>
                     <div id="csSubmenu" class="grid transition-all duration-300 {{ $isCs ? 'submenu-open' : 'submenu-closed' }}">
                         <div class="overflow-hidden flex flex-col">
-                            <a href="{{ url('/admin/costumerservice/dashboard') }}" class="pl-[48px] pr-6 py-2 {{ str_contains($currentUrl, '/admin/costumerservice/dashboard') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
+                            <a href="{{ route('halaman.utama.cs.admin') }}" class="pl-[48px] pr-6 py-2 {{ str_contains($currentUrl, '/admin/costumerservice/dashboard') ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
                                 Dashboard
                             </a>
-                            <a href="{{ url('/admin/costumerservice/keloladata') }}" class="pl-[48px] pr-6 py-2 {{ $isCsKelolaData ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
+                            <a href="{{ route('kelola.data.cs.admin') }}" class="pl-[48px] pr-6 py-2 {{ $isCsKelolaData ? 'text-brand-blue font-bold' : 'text-[#a3a3a3] font-medium' }} text-[13.5px] hover:text-gray-800 hover:bg-gray-50 transition-colors">
                                 Kelola Data
                             </a>
                         </div>
@@ -320,155 +320,386 @@
         </div>
     </div>
 
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            if (sidebar) sidebar.classList.toggle('-translate-x-full');
-            if (overlay) overlay.classList.toggle('hidden');
-        }
+<script>
+    /*
+    |--------------------------------------------------------------------------
+    | SIDEBAR
+    |--------------------------------------------------------------------------
+    */
 
-        function toggleSubmenu(submenuId, arrowId) {
-            const submenu = document.getElementById(submenuId);
-            const arrow = document.getElementById(arrowId);
-            if (!submenu) return;
-            if (submenu.classList.contains('submenu-open')) {
-                submenu.classList.replace('submenu-open', 'submenu-closed');
-                if (arrow) arrow.style.transform = 'rotate(0deg)';
-            } else {
-                submenu.classList.replace('submenu-closed', 'submenu-open');
-                if (arrow) arrow.style.transform = 'rotate(90deg)';
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (!sidebar || !overlay) return;
+
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SUBMENU
+    |--------------------------------------------------------------------------
+    */
+
+    function toggleSubmenu(submenuId, arrowId) {
+        const submenu = document.getElementById(submenuId);
+        const arrow = document.getElementById(arrowId);
+
+        if (!submenu) return;
+
+        const isOpen = submenu.classList.contains('submenu-open');
+
+        if (isOpen) {
+            submenu.classList.replace('submenu-open', 'submenu-closed');
+
+            if (arrow) {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        } else {
+            submenu.classList.replace('submenu-closed', 'submenu-open');
+
+            if (arrow) {
+                arrow.style.transform = 'rotate(90deg)';
             }
         }
+    }
 
-        let toastTimeout;
 
-        // TOAST SYSTEM
-        function showToast(message, type = 'success') {
+    /*
+    |--------------------------------------------------------------------------
+    | TOAST
+    |--------------------------------------------------------------------------
+    */
+
+    let toastTimeout = null;
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toastAlert');
+        const toastBg = document.getElementById('toastBg');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMsg = document.getElementById('toastMessage');
+        const toastIcon = document.getElementById('toastIcon');
+
+        if (!toast || !toastBg || !toastTitle || !toastMsg || !toastIcon) {
+            return;
+        }
+
+        clearTimeout(toastTimeout);
+
+        toastMsg.textContent = message;
+
+        if (type === 'error' || type === 'failed') {
+            // ERROR
+            toastTitle.textContent = 'Gagal';
+            toastTitle.className =
+                'font-semibold text-sm text-red-600 leading-tight';
+
+            toastIcon.className =
+                'flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 text-red-500';
+
+            toastIcon.innerHTML =
+                '<i class="ph-fill ph-x-circle text-[22px]"></i>';
+
+            toastBg.className =
+                'bg-white text-gray-800 px-5 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-3.5 border border-red-100/50 min-w-[320px] max-w-[420px]';
+
+        } else {
+            // SUCCESS
+            toastTitle.textContent = 'Berhasil';
+            toastTitle.className =
+                'font-semibold text-sm text-emerald-600 leading-tight';
+
+            toastIcon.className =
+                'flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500';
+
+            toastIcon.innerHTML =
+                '<i class="ph-fill ph-check-circle text-[22px]"></i>';
+
+            toastBg.className =
+                'bg-white text-gray-800 px-5 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-3.5 border border-emerald-100/50 min-w-[320px] max-w-[420px]';
+        }
+
+        // Tampilkan toast
+        toast.classList.remove('hidden');
+
+        requestAnimationFrame(() => {
+            toast.classList.remove('opacity-0', 'translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+        });
+
+        // Auto close 4 detik
+        toastTimeout = setTimeout(() => {
+            closeToast();
+        }, 4000);
+    }
+
+
+    function closeToast() {
+        const toast = document.getElementById('toastAlert');
+
+        if (!toast) return;
+
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-2');
+
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 300);
+
+        if (toastTimeout) {
             clearTimeout(toastTimeout);
-            const toast = document.getElementById('toastAlert');
-            const toastBg = document.getElementById('toastBg');
-            const toastTitle = document.getElementById('toastTitle');
-            const toastMsg = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
+            toastTimeout = null;
+        }
+    }
 
-            if (!toast) return;
 
-            toastMsg.textContent = message;
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE PETUGAS
+    |--------------------------------------------------------------------------
+    */
 
-            if (type === 'error' || type === 'failed') {
-                toastTitle.textContent = 'Gagal';
-                toastTitle.className = 'font-semibold text-sm text-red-600 leading-tight';
-                toastIcon.className = 'flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 text-red-500';
-                toastIcon.innerHTML = '<i class="ph-fill ph-x-circle text-[22px]"></i>';
-                toastBg.className = 'bg-white text-gray-800 px-5 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-3.5 border border-red-100/50 min-w-[320px] max-w-[420px]';
-            } else {
-                toastTitle.textContent = 'Berhasil';
-                toastTitle.className = 'font-semibold text-sm text-emerald-600 leading-tight';
-                toastIcon.className = 'flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500';
-                toastIcon.innerHTML = '<i class="ph-fill ph-check-circle text-[22px]"></i>';
-                toastBg.className = 'bg-white text-gray-800 px-5 py-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex items-center gap-3.5 border border-emerald-100/50 min-w-[320px] max-w-[420px]';
+    function hapusPetugas(id) {
+        const form = document.getElementById('formDeletePetugas');
+
+        if (!form) {
+            console.error('Form delete petugas tidak ditemukan.');
+            return;
+        }
+
+        form.action = `/hapus/petugas/admin/${id}`;
+        form.submit();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    let rowToDelete = null;
+
+    function openDeleteModal(onConfirm) {
+        const modal = document.getElementById('deleteModal');
+        const content = document.getElementById('deleteModalContent');
+        const confirmBtn = document.getElementById('btnConfirmDelete');
+
+        if (!modal || !content || !confirmBtn) {
+            return;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Reset posisi awal animasi
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+
+        confirmBtn.onclick = function () {
+            if (typeof onConfirm === 'function') {
+                onConfirm();
             }
 
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.remove('opacity-0', 'translate-y-2');
-                toast.classList.add('opacity-100', 'translate-y-0');
-            }, 10);
+            closeDeleteModal();
+        };
+    }
 
-            toastTimeout = setTimeout(closeToast, 4000);
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        const content = document.getElementById('deleteModalContent');
+
+        if (!modal || !content) {
+            return;
         }
 
-        function closeToast() {
-            const toast = document.getElementById('toastAlert');
-            if (!toast) return;
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', 'translate-y-2');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-            }, 300);
-            if (toastTimeout) {
-                clearTimeout(toastTimeout);
-            }
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+
+    function hapusBaris(element) {
+        if (!element) return;
+
+        const row =
+            element.closest('tr') ||
+            element.closest('.data-row') ||
+            element.closest('li');
+
+        if (!row) {
+            console.warn('Baris data tidak ditemukan.');
+            return;
         }
 
-        // DELETE MODAL LOGIC
-        let rowToDelete = null;
+        rowToDelete = row;
 
-        function openDeleteModal(onConfirm) {
-            const modal = document.getElementById('deleteModal');
-            const content = document.getElementById('deleteModalContent');
-            const confirmBtn = document.getElementById('btnConfirmDelete');
-            if (!modal || !content) return;
+        openDeleteModal(() => {
+            if (!rowToDelete) return;
 
-            modal.classList.replace('hidden', 'flex');
+            rowToDelete.style.transition = 'all 0.3s ease';
+            rowToDelete.style.opacity = '0';
 
             setTimeout(() => {
-                content.classList.replace('scale-95', 'scale-100');
-                content.classList.replace('opacity-0', 'opacity-100');
-            }, 10);
-
-            confirmBtn.onclick = () => {
-                if (typeof onConfirm === 'function') {
-                    onConfirm();
-                }
-                closeDeleteModal();
-            };
-        }
-
-        function closeDeleteModal() {
-            const modal = document.getElementById('deleteModal');
-            const content = document.getElementById('deleteModalContent');
-            if (!modal || !content) return;
-
-            content.classList.replace('scale-100', 'scale-95');
-            content.classList.replace('opacity-100', 'opacity-0');
-
-            setTimeout(() => {
-                modal.classList.replace('flex', 'hidden');
-            }, 300);
-        }
-
-        function hapusBaris(element) {
-            const row = element.closest('tr') || element.closest('.data-row') || element.closest('li');
-            rowToDelete = row;
-            openDeleteModal(() => {
                 if (rowToDelete) {
-                    rowToDelete.style.transition = 'all 0.3s ease';
-                    rowToDelete.style.opacity = '0';
-                    setTimeout(() => {
-                        rowToDelete.remove();
-                        showToast('Data berhasil dihapus (Mode Preview)', 'success');
-                    }, 300);
+                    rowToDelete.remove();
+                    rowToDelete = null;
                 }
-            });
-        }
 
-        // LOGOUT MODAL LOGIC
-        function openLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            const content = document.getElementById('logoutModalContent');
-            if (!modal || !content) return;
-
-            modal.classList.replace('hidden', 'flex');
-            setTimeout(() => {
-                content.classList.replace('scale-95', 'scale-100');
-                content.classList.replace('opacity-0', 'opacity-100');
-            }, 10);
-        }
-
-        function closeLogoutModal() {
-            const modal = document.getElementById('logoutModal');
-            const content = document.getElementById('logoutModalContent');
-            if (!modal || !content) return;
-
-            content.classList.replace('scale-100', 'scale-95');
-            content.classList.replace('opacity-100', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.replace('flex', 'hidden');
+                showToast(
+                    'Data berhasil dihapus (Mode Preview)',
+                    'success'
+                );
             }, 300);
+        });
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOGOUT MODAL
+    |--------------------------------------------------------------------------
+    */
+
+    function openLogoutModal() {
+        const modal = document.getElementById('logoutModal');
+        const content = document.getElementById('logoutModalContent');
+
+        if (!modal || !content) {
+            return;
         }
-    </script>
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        // Reset animasi
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+
+        requestAnimationFrame(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        });
+    }
+
+
+    function closeLogoutModal() {
+        const modal = document.getElementById('logoutModal');
+        const content = document.getElementById('logoutModalContent');
+
+        if (!modal || !content) {
+            return;
+        }
+
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+
+        setTimeout(() => {
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | CONFIRM LOGOUT
+    |--------------------------------------------------------------------------
+    */
+
+    function confirmLogout() {
+        const form = document.getElementById('globalLogoutForm');
+
+        if (form) {
+            form.submit();
+        }
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SESSION TOAST
+    |--------------------------------------------------------------------------
+    */
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        @if(session('success'))
+            showToast(
+                @json(session('success')),
+                'success'
+            );
+        @endif
+
+        @if(session('error'))
+            showToast(
+                @json(session('error')),
+                'error'
+            );
+        @endif
+
+        @if(session('failed'))
+            showToast(
+                @json(session('failed')),
+                'error'
+            );
+        @endif
+
+        @if($errors->any())
+            showToast(
+                @json($errors->first()),
+                'error'
+            );
+        @endif
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ESC KEY
+    |--------------------------------------------------------------------------
+    | Menutup modal ketika tombol Escape ditekan.
+    */
+
+    document.addEventListener('keydown', function (event) {
+
+        if (event.key !== 'Escape') return;
+
+        const deleteModal = document.getElementById('deleteModal');
+        const logoutModal = document.getElementById('logoutModal');
+
+        if (
+            deleteModal &&
+            !deleteModal.classList.contains('hidden')
+        ) {
+            closeDeleteModal();
+        }
+
+        if (
+            logoutModal &&
+            !logoutModal.classList.contains('hidden')
+        ) {
+            closeLogoutModal();
+        }
+
+    });
+</script>
+
+
 
     @yield('scripts')
 </body>

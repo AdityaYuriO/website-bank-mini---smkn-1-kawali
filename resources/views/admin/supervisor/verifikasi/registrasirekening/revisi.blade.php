@@ -22,12 +22,6 @@
 @endsection
 
 @section('content')
-@php
-    $nasabah = $nasabah ?? (object)[
-        'id' => 1,
-        'nama_nasabah' => 'Ahmad Fauzi',
-    ];
-@endphp
 <div class="fade-in flex-1 mt-4">
     <div class="bg-white rounded-[24px] shadow-card p-6 md:p-10 w-full border border-gray-50">
         <h3 class="text-[20px] font-bold text-gray-800 mb-8 flex items-center gap-3">
@@ -35,16 +29,19 @@
             Catatan Revisi Registrasi
         </h3>
 
-        <form onsubmit="event.preventDefault(); showToast('Catatan revisi berhasil dikirim (Mode Preview)', 'warning'); setTimeout(() => { window.location.href='{{ url('/admin/supervisor/verifikasi/registrasirekening') }}'; }, 1000); return false;">
+        <form action="{{ Route('revisi.nasabah.admin', $nasabah->id) }}" method="post">
+            @csrf
+            @method('PUT')
+
             <input type="hidden" value="revisi" name="status_akun">
-            <input type="hidden" value="{{ $user->name ?? 'Administrator' }}" name="nama_perevisi">
+            <input type="hidden" value="Admin" name="nama_perevisi">
 
             <div class="space-y-6">
                 <!-- Info Nasabah yang Direvisi -->
                 <div class="bg-amber-50/50 border border-amber-100 rounded-2xl p-5 mb-6 flex items-center gap-4">
                     <div>
                         <span class="text-[11px] font-bold text-brand-gold uppercase tracking-wider block mb-1">Nasabah yang Direvisi</span>
-                        <h4 class="text-[18px] font-bold text-gray-800">{{ $nasabah->nama_nasabah ?? 'Ahmad Fauzi' }}</h4>
+                        <h4 class="text-[18px] font-bold text-gray-800">{{ $nasabah->nama_nasabah ?? 'Dominik' }}</h4>
                     </div>
                 </div>
 
@@ -63,7 +60,7 @@
 
             <!-- Buttons -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-10">
-                <a href="{{ url('/admin/supervisor/verifikasi/registrasirekening') }}" class="w-full bg-[#797979] hover:bg-gray-600 text-white font-bold py-3.5 rounded-xl transition-colors text-[15px] flex items-center justify-center shadow-sm">
+                <a href="{{ route('supervisor.verifikasi.registrasi') }}" class="w-full bg-[#797979] hover:bg-gray-600 text-white font-bold py-3.5 rounded-xl transition-colors text-[15px] flex items-center justify-center shadow-sm">
                     Kembali
                 </a>
                 <button type="submit" class="w-full bg-brand-blue hover:opacity-95 text-white font-bold py-3.5 rounded-xl transition-colors text-[15px] shadow-lg shadow-brand-blue/10">
