@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title','Supervisor Dashboard')
+@section('title','Admin Verifikasi Rekening')
 @section('header_title')
 Selamat Datang, Admin!
 @endsection

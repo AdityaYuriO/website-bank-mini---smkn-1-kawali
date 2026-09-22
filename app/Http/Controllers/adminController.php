@@ -24,7 +24,9 @@ use Carbon\Carbon;
 class adminController extends Controller
 {
     public function index() {
-        return view('admin.supervisor.dashboard');
+        $totalNasabah = Rekening::where('status_akun', 'aktif')->count();
+        $totalPending = Rekening::where('status_akun', 'pending')->count();
+        return view('admin.supervisor.dashboard', compact('totalNasabah', 'totalPending'));
     }
 
     //petugas //

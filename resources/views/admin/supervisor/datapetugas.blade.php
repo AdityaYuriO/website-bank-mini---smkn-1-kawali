@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title','Admin Supervisor Dashboard')
+@section('title','Admin Supervisor Petugas')
 @section('header_title')
 Selamat Datang, {{ $user->name ?? 'Administrator' }}!
 @endsection
