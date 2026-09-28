@@ -108,18 +108,24 @@ class rekeningController extends Controller
 
 
                 if ($request->jabatan == 'Siswa') {
-                    $no_rekening = '03' . $request->jurusan . $request->nis_nip;
+                    $no_rekening = '3' . $request->jurusan . $request->nis_nip;
                 }
 
                 if ($request->jabatan == 'Guru') {
                     $tanggal = Carbon::parse($request->tanggal_lahir)->format('Ymd');
+
                     $urutan = Nasabah::where('jabatan', 'Guru')->count() + 1;
+                    $urutan = str_pad($urutan, 3, '0', STR_PAD_LEFT);
+
                     $no_rekening = '01' . $tanggal . $urutan;
                 }
 
                 if ($request->jabatan == 'TU') {
                     $tanggal = Carbon::parse($request->tanggal_lahir)->format('Ymd');
+
                     $urutan = Nasabah::where('jabatan', 'TU')->count() + 1;
+                    $urutan = str_pad($urutan, 3, '0', STR_PAD_LEFT);
+
                     $no_rekening = '02' . $tanggal . $urutan;
                 }
 
